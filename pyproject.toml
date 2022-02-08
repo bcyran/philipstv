@@ -8,8 +8,24 @@ authors = ["Bazyli Cyran <bazyli.cyran@gmail.com>"]
 python = "^3.10"
 
 [tool.poetry.dev-dependencies]
-pytest = "^5.2"
+pytest = "^7.0.0"
+black = "^22.1.0"
+mypy = "^0.931"
+flake8 = "^4.0.1"
+isort = "^5.10.1"
+tox = "^3.24.5"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+strict = true
+show_error_codes = true
+
+[tool.black]
+line-length = 100
+
+[tool.isort]
+profile = "black"
+line_length = 100
