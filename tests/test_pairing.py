@@ -2,8 +2,8 @@ from typing import Any, Dict, Optional, Tuple
 
 import pytest
 
-from phylips.api import PhilipsTVAPIError
-from phylips.pairing import SECRET, DeviceSpec, PairingError, PhilipsTVPairer
+from phylips.exceptions import PairingError, PhilipsTVAPIError
+from phylips.pairing import SECRET, DeviceSpec, PhilipsTVPairer
 from phylips.utils import create_signature
 
 DEVICE_SPEC = DeviceSpec(

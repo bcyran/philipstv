@@ -3,6 +3,7 @@ from dataclasses import asdict, dataclass
 from typing import Any, Callable, Dict
 
 from .api import Credentials, PhilipsTVAPI
+from .exceptions import PairingError
 from .utils import create_signature
 
 SECRET = b64decode(
@@ -23,13 +24,6 @@ class DeviceSpec:
 
     def as_dict(self) -> Dict[str, Any]:
         return asdict(self)
-
-
-class PairingError(Exception):
-    def __init__(self, error_id: str, error_text: str) -> None:
-        self.error_id = error_id
-        self.error_text = error_text
-        super().__init__(f"Pairing error: {error_id} {error_text}")
 
 
 class PhilipsTVPairer:

@@ -8,16 +8,14 @@ from requests import HTTPError, Session
 from requests.auth import HTTPDigestAuth
 from urllib3.exceptions import InsecureRequestWarning
 
+from .exceptions import PhilipsTVAPIError
+
 urllib3.disable_warnings(InsecureRequestWarning)  # type: ignore
 
 
 LOGGER = logging.getLogger(__name__)
 
 Credentials = Tuple[str, str]
-
-
-class PhilipsTVAPIError(Exception):
-    pass
 
 
 T = TypeVar("T")
