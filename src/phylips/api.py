@@ -1,9 +1,12 @@
+import logging
 from functools import wraps
 from typing import Any, Callable, Dict, Optional, ParamSpec, Tuple, TypeVar
 from urllib.parse import urljoin
 
 from requests import HTTPError, Session
 from requests.auth import HTTPDigestAuth
+
+LOGGER = logging.getLogger(__name__)
 
 Credentials = Tuple[str, str]
 
@@ -43,16 +46,22 @@ class PhilipsTVAPI:
     @wrap_api_exceptions
     def post(self, path: str, payload: Dict[str, Any]) -> Any:
         url = urljoin(self.url, path)
+        LOGGER.debug("Request: POST %s %s", path, payload)
         response = self._session.post(url, json=payload, auth=self._get_auth())
         response.raise_for_status()
-        return response.json()
+        response_body = response.json()
+        LOGGER.debug("Response: %s %s", response.status_code, response_body)
+        return response_body
 
     @wrap_api_exceptions
     def get(self, path: str) -> Any:
         url = urljoin(self.url, path)
+        LOGGER.debug("Request: GET %s", path)
         response = self._session.get(url, auth=self._get_auth())
         response.raise_for_status()
-        return response.json()
+        response_body = response.json()
+        LOGGER.debug("Response: %s %s", response.status_code, response_body)
+        return response_body
 
     def _get_auth(self) -> Optional[HTTPDigestAuth]:
         return HTTPDigestAuth(*self._auth) if self._auth else None
