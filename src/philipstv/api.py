@@ -1,6 +1,6 @@
 import logging
 from functools import wraps
-from typing import Any, Callable, Dict, Optional, ParamSpec, Tuple, TypeVar
+from typing import Any, Callable, Dict, Optional, ParamSpec, TypeVar
 from urllib.parse import urljoin
 
 import urllib3
@@ -9,13 +9,12 @@ from requests.auth import HTTPDigestAuth
 from urllib3.exceptions import InsecureRequestWarning
 
 from .exceptions import PhilipsTVAPIError
+from .types import Credentials
 
 urllib3.disable_warnings(InsecureRequestWarning)  # type: ignore
 
 
 LOGGER = logging.getLogger(__name__)
-
-Credentials = Tuple[str, str]
 
 
 T = TypeVar("T")

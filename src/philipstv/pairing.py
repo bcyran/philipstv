@@ -2,13 +2,15 @@ from base64 import b64decode
 from dataclasses import asdict, dataclass
 from typing import Any, Callable, Dict
 
-from .api import Credentials, PhilipsTVAPI
+from .api import PhilipsTVAPI
 from .exceptions import PhilipsTVPairerError
+from .types import Credentials
 from .utils import create_signature
 
 SECRET = b64decode(
     "JCqdN5AcnAHgJYseUn7ER5k3qgtemfUvMRghQpTfTZq7Cvv8EPQPqfz6dDxPQPSu4gKFPWkJGw32zyASgJkHwCjU"
 )
+
 
 PinCallback = Callable[[], str]
 
