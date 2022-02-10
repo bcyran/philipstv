@@ -1,8 +1,8 @@
+from abc import abstractmethod
 from base64 import b64decode
 from dataclasses import asdict, dataclass
-from typing import Any, Callable, Dict
+from typing import Any, Callable, Dict, Optional, Protocol, Tuple
 
-from .api import PhilipsTVAPI
 from .exceptions import PhilipsTVPairerError
 from .types import Credentials
 from .utils import create_signature
@@ -13,6 +13,16 @@ SECRET = b64decode(
 
 
 PinCallback = Callable[[], str]
+
+
+class PairingAPIInterface(Protocol):
+    @abstractmethod
+    def set_auth(self, auth: Optional[Tuple[str, str]]) -> None:
+        raise NotImplementedError
+
+    @abstractmethod
+    def post(self, path: str, payload: Dict[str, Any]) -> Any:
+        raise NotImplementedError
 
 
 @dataclass
@@ -29,8 +39,8 @@ class DeviceSpec:
 
 
 class PhilipsTVPairer:
-    def __init__(self, api: PhilipsTVAPI, device_spec: DeviceSpec) -> None:
-        self.api: PhilipsTVAPI = api
+    def __init__(self, api: PairingAPIInterface, device_spec: DeviceSpec) -> None:
+        self.api: PairingAPIInterface = api
         self.device_spec = device_spec
 
     def pair(self, pin_callback: PinCallback) -> Credentials:
