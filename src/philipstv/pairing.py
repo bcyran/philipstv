@@ -3,7 +3,7 @@ from dataclasses import asdict, dataclass
 from typing import Any, Callable, Dict
 
 from .api import Credentials, PhilipsTVAPI
-from .exceptions import PairingError
+from .exceptions import PhilipsTVPairerError
 from .utils import create_signature
 
 SECRET = b64decode(
@@ -34,7 +34,7 @@ class PhilipsTVPairer:
     def pair(self, pin_callback: PinCallback) -> Credentials:
         pair_response = self.pair_request()
         if pair_response["error_id"] != "SUCCESS":
-            raise PairingError(pair_response["error_id"], pair_response["error_text"])
+            raise PhilipsTVPairerError(pair_response["error_id"], pair_response["error_text"])
 
         pair_pin = pin_callback()
 
@@ -42,7 +42,7 @@ class PhilipsTVPairer:
             pair_pin, pair_response["auth_key"], pair_response["timestamp"]
         )
         if confirm_response["error_id"] != "SUCCESS":
-            raise PairingError(confirm_response["error_id"], confirm_response["error_text"])
+            raise PhilipsTVPairerError(confirm_response["error_id"], confirm_response["error_text"])
 
         return (self.device_spec.id, pair_response["auth_key"])
 

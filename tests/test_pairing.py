@@ -2,7 +2,7 @@ from typing import Any, Dict, Optional, Tuple
 
 import pytest
 
-from philipstv.exceptions import PairingError, PhilipsTVAPIError
+from philipstv.exceptions import PhilipsTVAPIError, PhilipsTVPairerError
 from philipstv.pairing import SECRET, DeviceSpec, PhilipsTVPairer
 from philipstv.utils import create_signature
 
@@ -133,5 +133,5 @@ def test_pair_error(responses: Dict[str, Any], expected_message: str) -> None:
     fake_api = FakePhilipsTVAPI(responses)
     pairer = PhilipsTVPairer(fake_api, DEVICE_SPEC)
 
-    with pytest.raises(PairingError, match=expected_message):
+    with pytest.raises(PhilipsTVPairerError, match=expected_message):
         pairer.pair(lambda: "<pin>")
