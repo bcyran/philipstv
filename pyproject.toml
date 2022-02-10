@@ -16,6 +16,7 @@ flake8 = "^4.0.1"
 isort = "^5.10.1"
 tox = "^3.24.5"
 types-requests = "^2.27.8"
+tox-poetry = "^0.4.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
