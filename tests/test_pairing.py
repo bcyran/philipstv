@@ -2,9 +2,9 @@ from typing import Any, Dict, Optional, Tuple
 
 import pytest
 
-from phylips.exceptions import PairingError, PhilipsTVAPIError
-from phylips.pairing import SECRET, DeviceSpec, PhilipsTVPairer
-from phylips.utils import create_signature
+from philipstv.exceptions import PairingError, PhilipsTVAPIError
+from philipstv.pairing import SECRET, DeviceSpec, PhilipsTVPairer
+from philipstv.utils import create_signature
 
 DEVICE_SPEC = DeviceSpec(
     id="<device_id>",

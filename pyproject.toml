@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "phylips"
+name = "philipstv"
 version = "0.1.0"
 description = ""
 authors = ["Bazyli Cyran <bazyli.cyran@gmail.com>"]
