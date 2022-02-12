@@ -1,5 +1,7 @@
 from typing import Optional
 
+from philipstv.model import PairingResponse
+
 
 class PhilipsError(Exception):
     pass
@@ -11,8 +13,7 @@ class PhilipsTVError(PhilipsError):
         super().__init__()
 
 
-class PhilipsTVPairerError(PhilipsError):
-    def __init__(self, error_id: str, error_text: str) -> None:
-        self.error_id = error_id
-        self.error_text = error_text
-        super().__init__(f"Pairing error: {error_id} {error_text}")
+class PhilipsTVPairingError(PhilipsError):
+    def __init__(self, response: PairingResponse) -> None:
+        self.response = response
+        super().__init__(f"Pairing error: {response.error_id} {response.error_text}")
