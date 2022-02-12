@@ -17,6 +17,7 @@ isort = "^5.10.1"
 tox = "^3.24.5"
 types-requests = "^2.27.8"
 tox-poetry = "^0.4.1"
+requests-mock = "^1.9.3"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
