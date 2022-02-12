@@ -1,17 +1,7 @@
-from dataclasses import asdict, dataclass
-from typing import Any, Dict, List, Optional, Type, TypeVar
+from dataclasses import dataclass
+from typing import List, Optional
 
-_T = TypeVar("_T")
-
-
-@dataclass(frozen=True)
-class APIModel:
-    def as_dict(self) -> Dict[str, Any]:
-        return asdict(self)
-
-    @classmethod
-    def parse(cls: Type[_T], raw: Any) -> _T:
-        return cls(**raw)
+from .base import APIModel
 
 
 @dataclass(frozen=True)
