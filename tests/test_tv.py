@@ -3,8 +3,7 @@ from typing import Any, Dict, Optional
 import pytest
 from requests_mock import Mocker
 
-from philipstv.exceptions import PhilipsTVError
-from philipstv.tv import PhilipsTV
+from philipstv import PhilipsTV, PhilipsTVError
 
 HOST = "192.168.0.1"
 PORT = 1926

@@ -2,10 +2,8 @@ from typing import Any, Dict
 
 import pytest
 
-from philipstv.api import PhilipsTVAPI
-from philipstv.exceptions import PhilipsTVPairingError
-from philipstv.model import DeviceInfo
-from philipstv.pairing import SECRET, PhilipsTVPairer
+from philipstv import DeviceInfo, PhilipsTVAPI, PhilipsTVPairer, PhilipsTVPairingError
+from philipstv.pairing import SECRET
 from philipstv.utils import create_signature
 from tests.fakes import FakePhilipsTV
 
