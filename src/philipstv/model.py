@@ -5,7 +5,7 @@ _T = TypeVar("_T")
 
 
 @dataclass(frozen=True)
-class ApiModel:
+class APIModel:
     def as_dict(self) -> Dict[str, Any]:
         return asdict(self)
 
@@ -15,7 +15,7 @@ class ApiModel:
 
 
 @dataclass(frozen=True)
-class DeviceInfo(ApiModel):
+class DeviceInfo(APIModel):
     id: str
     device_name: str
     device_os: str
@@ -25,26 +25,26 @@ class DeviceInfo(ApiModel):
 
 
 @dataclass(frozen=True)
-class PairingAuthInfo(ApiModel):
+class PairingAuthInfo(APIModel):
     pin: str
     auth_timestamp: int
     auth_signature: str
 
 
 @dataclass(frozen=True)
-class PairingRequestPayload(ApiModel):
+class PairingRequestPayload(APIModel):
     scope: List[str]
     device: DeviceInfo
 
 
 @dataclass(frozen=True)
-class PairingGrantPayload(ApiModel):
+class PairingGrantPayload(APIModel):
     auth: PairingAuthInfo
     device: DeviceInfo
 
 
 @dataclass(frozen=True)
-class PairingResponse(ApiModel):
+class PairingResponse(APIModel):
     error_id: str
     error_text: str
 
