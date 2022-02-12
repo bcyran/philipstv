@@ -18,6 +18,7 @@ tox = "^3.24.5"
 types-requests = "^2.27.8"
 tox-poetry = "^0.4.1"
 requests-mock = "^1.9.3"
+pytest-cov = "^3.0.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -33,3 +34,14 @@ line-length = 100
 [tool.isort]
 profile = "black"
 line_length = 100
+
+[tool.coverage.run]
+source = ["philipstv"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+skip_empty = true
+exclude_lines = [
+    "raise NotImplementedError"
+]
