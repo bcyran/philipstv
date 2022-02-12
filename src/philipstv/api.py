@@ -3,11 +3,13 @@ from typing import Any, Optional, Type, TypeVar
 from .interfaces import PhilipsTVInterface
 from .model import (
     APIModel,
+    NewVolume,
     PairingGrantPayload,
     PairingRequestPayload,
     PairingRequestResponse,
     PairingResponse,
     PowerState,
+    Volume,
 )
 from .types import Credentials
 
@@ -30,6 +32,12 @@ class PhilipsTVAPI:
 
     def get_powerstate(self) -> PowerState:
         return self._api_get_model("powerstate", PowerState)
+
+    def get_volume(self) -> Volume:
+        return self._api_get_model("audio/volume", Volume)
+
+    def set_volume(self, volume: NewVolume) -> None:
+        self._api_post("audio/volume", volume)
 
     def _api_post_model(
         self, path: str, resp_model: Type[_T], payload: Optional[APIModel] = None
