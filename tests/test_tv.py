@@ -11,8 +11,8 @@ PORT = 1926
 PAYLOAD = {"<key>": "<value>"}
 
 PATHS = [
-    pytest.param("api/path", f"https://{HOST}:{PORT}/6/api/path", id="no leading slash"),
-    pytest.param("/api/path", f"https://{HOST}:{PORT}/6/api/path", id="leading slash present"),
+    pytest.param("random/path", f"https://{HOST}:{PORT}/random/path", id="no leading slash"),
+    pytest.param("/random/path", f"https://{HOST}:{PORT}/random/path", id="leading slash present"),
 ]
 RESPONSES = [
     pytest.param({"<resp_key>": "<resp_value>"}, id="response present"),
@@ -51,8 +51,8 @@ def test_tv_get(
 
 @pytest.mark.parametrize("status_code", [401, 404, 500])
 def test_tv_error(status_code: int, requests_mock: Mocker) -> None:
-    path = "api/path"
-    url = f"https://{HOST}:{PORT}/6/{path}"
+    path = "random/path"
+    url = f"https://{HOST}:{PORT}/{path}"
     requests_mock.post(url, status_code=status_code)
 
     tv = PhilipsTV(HOST, PORT)
