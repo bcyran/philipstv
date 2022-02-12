@@ -7,6 +7,7 @@ from .model import (
     PairingRequestPayload,
     PairingRequestResponse,
     PairingResponse,
+    PowerState,
 )
 from .types import Credentials
 
@@ -26,6 +27,9 @@ class PhilipsTVAPI:
 
     def pair_grant(self, payload: PairingGrantPayload) -> PairingResponse:
         return self._api_post_model("pair/grant", PairingResponse, payload)
+
+    def get_powerstate(self) -> PowerState:
+        return self._api_get_model("powerstate", PowerState)
 
     def _api_post_model(
         self, path: str, resp_model: Type[_T], payload: Optional[APIModel] = None

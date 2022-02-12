@@ -1,4 +1,5 @@
 from .base import APIModel
+from .general import PowerState
 from .pairing import (
     DeviceInfo,
     PairingAuthInfo,
@@ -16,4 +17,5 @@ __all__ = [
     "PairingRequestPayload",
     "PairingRequestResponse",
     "PairingResponse",
+    "PowerState",
 ]
