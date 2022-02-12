@@ -2,7 +2,7 @@ from typing import Any, Dict, Optional, Tuple
 
 import pytest
 
-from philipstv.exceptions import PhilipsTVAPIError, PhilipsTVPairerError
+from philipstv.exceptions import PhilipsTVError, PhilipsTVPairerError
 from philipstv.pairing import SECRET, DeviceSpec, PhilipsTVPairer
 from philipstv.utils import create_signature
 
@@ -57,7 +57,7 @@ class FakePhilipsTVAPI:
         response = self.responses.get(path)
         if response:
             return response
-        raise PhilipsTVAPIError()
+        raise PhilipsTVError()
 
 
 def test_pair_request() -> None:

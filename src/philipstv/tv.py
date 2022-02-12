@@ -8,7 +8,7 @@ from requests import HTTPError, Session
 from requests.auth import HTTPDigestAuth
 from urllib3.exceptions import InsecureRequestWarning
 
-from .exceptions import PhilipsTVAPIError
+from .exceptions import PhilipsTVError
 from .types import Credentials
 
 urllib3.disable_warnings(InsecureRequestWarning)  # type: ignore
@@ -21,7 +21,7 @@ _T = TypeVar("_T")
 _P = ParamSpec("_P")
 
 
-def _wrap_api_exceptions(func: Callable[_P, _T]) -> Callable[_P, _T]:
+def _wrap_http_exceptions(func: Callable[_P, _T]) -> Callable[_P, _T]:
     @wraps(func)
     def wrapper(*args: _P.args, **kwargs: _P.kwargs) -> _T:
         try:
@@ -30,12 +30,12 @@ def _wrap_api_exceptions(func: Callable[_P, _T]) -> Callable[_P, _T]:
             status_code = None
             if exc.response is not None:
                 status_code = exc.response.status_code
-            raise PhilipsTVAPIError(status_code) from exc
+            raise PhilipsTVError(status_code) from exc
 
     return wrapper
 
 
-class PhilipsTVAPI:
+class PhilipsTV:
     def __init__(self, host: str, port: int = 1926, auth: Optional[Credentials] = None) -> None:
         self.host = host
         self.port = port
@@ -48,7 +48,7 @@ class PhilipsTVAPI:
     def set_auth(self, auth: Optional[Credentials]) -> None:
         self._auth = auth
 
-    @_wrap_api_exceptions
+    @_wrap_http_exceptions
     def post(self, path: str, payload: Optional[Dict[str, Any]] = None) -> Any:
         _LOGGER.debug("Request: POST %s %s", path, payload)
         response = self._session.post(self._get_url(path), json=payload, auth=self._get_auth())
@@ -57,7 +57,7 @@ class PhilipsTVAPI:
         _LOGGER.debug("Response: %s %s", response.status_code, response_body)
         return response_body
 
-    @_wrap_api_exceptions
+    @_wrap_http_exceptions
     def get(self, path: str) -> Any:
         _LOGGER.debug("Request: GET %s", path)
         response = self._session.get(self._get_url(path), auth=self._get_auth())

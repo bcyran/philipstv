@@ -3,8 +3,8 @@ from typing import Any, Dict, Optional
 import pytest
 from requests_mock import Mocker
 
-from philipstv.api import PhilipsTVAPI
-from philipstv.exceptions import PhilipsTVAPIError
+from philipstv.exceptions import PhilipsTVError
+from philipstv.tv import PhilipsTV
 
 HOST = "192.168.0.1"
 PORT = 1926
@@ -22,13 +22,13 @@ RESPONSES = [
 
 @pytest.mark.parametrize("path, expected_url", PATHS)
 @pytest.mark.parametrize("expected_response", RESPONSES)
-def test_api_post(
+def test_tv_post(
     path: str, expected_url: str, expected_response: Optional[Dict[str, Any]], requests_mock: Mocker
 ) -> None:
     requests_mock.post(expected_url, json=expected_response)
 
-    api = PhilipsTVAPI(HOST, PORT)
-    actual_response = api.post(path, PAYLOAD)
+    tv = PhilipsTV(HOST, PORT)
+    actual_response = tv.post(path, PAYLOAD)
 
     assert requests_mock.last_request
     assert requests_mock.last_request.json() == PAYLOAD
@@ -37,27 +37,27 @@ def test_api_post(
 
 @pytest.mark.parametrize("path, expected_url", PATHS)
 @pytest.mark.parametrize("expected_response", RESPONSES)
-def test_api_get(
+def test_tv_get(
     path: str, expected_url: str, expected_response: Optional[Dict[str, Any]], requests_mock: Mocker
 ) -> None:
     requests_mock.get(expected_url, json=expected_response)
 
-    api = PhilipsTVAPI(HOST, PORT)
-    actual_response = api.get(path)
+    tv = PhilipsTV(HOST, PORT)
+    actual_response = tv.get(path)
 
     assert requests_mock.last_request
     assert actual_response == expected_response
 
 
 @pytest.mark.parametrize("status_code", [401, 404, 500])
-def test_error(status_code: int, requests_mock: Mocker) -> None:
+def test_tv_error(status_code: int, requests_mock: Mocker) -> None:
     path = "api/path"
     url = f"https://{HOST}:{PORT}/6/{path}"
     requests_mock.post(url, status_code=status_code)
 
-    api = PhilipsTVAPI(HOST, PORT)
+    tv = PhilipsTV(HOST, PORT)
 
-    with pytest.raises(PhilipsTVAPIError) as excinfo:
-        api.post(path)
+    with pytest.raises(PhilipsTVError) as excinfo:
+        tv.post(path)
 
     assert excinfo.value.status_code == status_code
