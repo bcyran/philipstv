@@ -52,7 +52,7 @@ def test_pair_happy_path() -> None:
 
     assert fake_tv.post_requests["6/pair/request"] == {
         "scope": ["read", "write", "control"],
-        "device": DEVICE_INFO.as_dict(),
+        "device": DEVICE_INFO.dump(),
     }
 
     assert fake_tv.post_requests["6/pair/grant"] == {
@@ -61,7 +61,7 @@ def test_pair_happy_path() -> None:
             "auth_timestamp": 12345,
             "auth_signature": SIGNATURE,
         },
-        "device": DEVICE_INFO.as_dict(),
+        "device": DEVICE_INFO.dump(),
     }
     assert actual_credentials == ("<device_id>", "<key>")
 

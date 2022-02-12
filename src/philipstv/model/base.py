@@ -1,12 +1,12 @@
 from dataclasses import asdict, dataclass
-from typing import Any, Dict, Type, TypeVar
+from typing import Any, Type, TypeVar
 
 _T = TypeVar("_T")
 
 
 @dataclass(frozen=True)
 class APIModel:
-    def as_dict(self) -> Dict[str, Any]:
+    def dump(self) -> Any:
         return asdict(self)
 
     @classmethod

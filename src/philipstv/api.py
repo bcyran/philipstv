@@ -36,7 +36,7 @@ class PhilipsTVAPI:
         return response_model.parse(self._api_get(path))
 
     def _api_post(self, path: str, payload: Optional[APIModel] = None) -> Any:
-        return self._tv.post(self._api_path(path), payload.as_dict() if payload else None)
+        return self._tv.post(self._api_path(path), payload.dump() if payload else None)
 
     def _api_get(self, path: str) -> Any:
         return self._tv.get(self._api_path(path))
