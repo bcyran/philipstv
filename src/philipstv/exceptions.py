@@ -1,9 +1,14 @@
+from typing import Optional
+
+
 class PhilipsTVError(Exception):
     pass
 
 
 class PhilipsTVAPIError(PhilipsTVError):
-    pass
+    def __init__(self, status_code: Optional[int] = None) -> None:
+        self.status_code = status_code
+        super().__init__()
 
 
 class PhilipsTVPairerError(PhilipsTVError):
