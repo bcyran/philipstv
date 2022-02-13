@@ -1,13 +1,16 @@
 from typing import Any, Optional, Type, TypeVar
 
-from philipstv.model.input import InputKey
-
 from .interfaces import PhilipsTVInterface
 from .model import (
     AllChannels,
+    AmbilightColors,
+    AmbilightColorSettings,
+    AmbilightMode,
+    AmbilightTopology,
     APIModel,
     CurrentChannel,
     CurrentVolume,
+    InputKey,
     PairingGrantPayload,
     PairingRequestPayload,
     PairingRequestResponse,
@@ -58,6 +61,27 @@ class PhilipsTVAPI:
 
     def input_key(self, key: InputKey) -> None:
         self._api_post("input/key", key)
+
+    def get_ambilight_topology(self) -> AmbilightTopology:
+        return self._api_get_model("ambilight/topology", AmbilightTopology)
+
+    def get_ambilight_mode(self) -> AmbilightMode:
+        return self._api_get_model("ambilight/mode", AmbilightMode)
+
+    def set_ambilight_mode(self, mode: AmbilightMode) -> None:
+        self._api_post("ambilight/mode", mode)
+
+    def get_ambilight_measured(self) -> AmbilightColors:
+        return self._api_get_model("ambilight/measured", AmbilightColors)
+
+    def get_ambilight_processed(self) -> AmbilightColors:
+        return self._api_get_model("ambilight/processed", AmbilightColors)
+
+    def get_ambilight_cached(self) -> AmbilightColors:
+        return self._api_get_model("ambilight/cached", AmbilightColors)
+
+    def set_ambilight_cached(self, colors: AmbilightColorSettings) -> None:
+        self._api_post("ambilight/cached", colors)
 
     def _api_post_model(
         self, path: str, resp_model: Type[_T], payload: Optional[APIModel] = None

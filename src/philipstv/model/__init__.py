@@ -1,3 +1,12 @@
+from .ambilight import (
+    AmbilightColor,
+    AmbilightColors,
+    AmbilightColorSettings,
+    AmbilightLayer,
+    AmbilightMode,
+    AmbilightModeValue,
+    AmbilightTopology,
+)
 from .audio import CurrentVolume, SetVolume
 from .base import APIModel
 from .channels import (
@@ -24,6 +33,13 @@ from .pairing import (
 __all__ = [
     "APIModel",
     "AllChannels",
+    "AmbilightColor",
+    "AmbilightColorSettings",
+    "AmbilightColors",
+    "AmbilightLayer",
+    "AmbilightMode",
+    "AmbilightModeValue",
+    "AmbilightTopology",
     "Channel",
     "ChannelID",
     "ChannelList",

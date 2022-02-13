@@ -25,7 +25,8 @@ class APIObjectMeta(type(BaseModel), type(APIModel)):  # type: ignore [misc]
 
 class APIObject(APIModel, BaseModel, metaclass=APIObjectMeta):
     def dump(self) -> Any:
-        return self.dict(by_alias=True)
+        data = super().dict(by_alias=True)
+        return data["__root__"] if self.__custom_root_type__ else data
 
     @classmethod
     def parse(cls: Type[_SelfAPIObject], raw: Any) -> _SelfAPIObject:
