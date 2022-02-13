@@ -10,7 +10,7 @@ from .channels import (
     CurrentChannel,
     SetChannel,
 )
-from .general import PowerState
+from .general import PowerState, PowerStateValue
 from .pairing import (
     DeviceInfo,
     PairingAuthInfo,
@@ -29,6 +29,7 @@ __all__ = [
     "ChannelListID",
     "ChannelShort",
     "CurrentChannel",
+    "PowerState",
     "CurrentVolume",
     "DeviceInfo",
     "PairingAuthInfo",
@@ -36,7 +37,7 @@ __all__ = [
     "PairingRequestPayload",
     "PairingRequestResponse",
     "PairingResponse",
-    "PowerState",
+    "PowerStateValue",
     "SetChannel",
     "SetVolume",
 ]

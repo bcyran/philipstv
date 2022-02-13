@@ -6,7 +6,6 @@ from pydantic import BaseModel
 
 _SelfModel = TypeVar("_SelfModel", bound="APIModel")
 _SelfAPIObject = TypeVar("_SelfAPIObject", bound="APIObject")
-_SelfAPIEnum = TypeVar("_SelfAPIEnum", bound="APIEnum")
 
 
 class APIModel(Protocol):
@@ -36,14 +35,5 @@ class APIObject(APIModel, BaseModel, metaclass=APIObjectMeta):
         allow_population_by_field_name = True
 
 
-class APIEnumMeta(type(Enum), type(APIModel)):  # type: ignore [misc]
+class StrEnum(str, Enum):
     pass
-
-
-class APIEnum(APIModel, Enum, metaclass=APIEnumMeta):
-    def dump(self) -> Any:
-        return self.value
-
-    @classmethod
-    def parse(cls: Type[_SelfAPIEnum], raw: Any) -> _SelfAPIEnum:
-        return cls(raw)

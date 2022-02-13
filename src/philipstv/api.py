@@ -36,6 +36,9 @@ class PhilipsTVAPI:
     def get_powerstate(self) -> PowerState:
         return self._api_get_model("powerstate", PowerState)
 
+    def set_powerstate(self, powerstate: PowerState) -> None:
+        self._api_post("powerstate", powerstate)
+
     def get_volume(self) -> CurrentVolume:
         return self._api_get_model("audio/volume", CurrentVolume)
 

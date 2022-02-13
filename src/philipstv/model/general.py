@@ -1,12 +1,10 @@
-from typing import Any
-
-from .base import APIEnum
+from .base import APIObject, StrEnum
 
 
-class PowerState(APIEnum):
+class PowerStateValue(StrEnum):
     ON = "On"
     STANDBY = "Standby"
 
-    @classmethod
-    def parse(cls, raw: Any) -> "PowerState":
-        return PowerState(raw["powerstate"])
+
+class PowerState(APIObject):
+    powerstate: PowerStateValue
