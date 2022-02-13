@@ -5,6 +5,8 @@ from .ambilight import (
     AmbilightLayer,
     AmbilightMode,
     AmbilightModeValue,
+    AmbilightPower,
+    AmbilightPowerValue,
     AmbilightTopology,
 )
 from .audio import CurrentVolume, SetVolume
@@ -39,6 +41,8 @@ __all__ = [
     "AmbilightLayer",
     "AmbilightMode",
     "AmbilightModeValue",
+    "AmbilightPower",
+    "AmbilightPowerValue",
     "AmbilightTopology",
     "Channel",
     "ChannelID",

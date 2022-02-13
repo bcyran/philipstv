@@ -5,6 +5,15 @@ from pydantic.fields import Field
 from .base import APIObject, StrEnum
 
 
+class AmbilightPowerValue(StrEnum):
+    ON = "On"
+    OFF = "Off"
+
+
+class AmbilightPower(APIObject):
+    power: AmbilightPowerValue
+
+
 class AmbilightTopology(APIObject):
     layers: int
     left: int

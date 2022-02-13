@@ -6,6 +6,7 @@ from .model import (
     AmbilightColors,
     AmbilightColorSettings,
     AmbilightMode,
+    AmbilightPower,
     AmbilightTopology,
     APIModel,
     CurrentChannel,
@@ -61,6 +62,12 @@ class PhilipsTVAPI:
 
     def input_key(self, key: InputKey) -> None:
         self._api_post("input/key", key)
+
+    def get_ambilight_power(self) -> AmbilightPower:
+        return self._api_get_model("ambilight/power", AmbilightPower)
+
+    def set_ambilight_power(self, power: AmbilightPower) -> None:
+        self._api_post("ambilight/power", power)
 
     def get_ambilight_topology(self) -> AmbilightTopology:
         return self._api_get_model("ambilight/topology", AmbilightTopology)
