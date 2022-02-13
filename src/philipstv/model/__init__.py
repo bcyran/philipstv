@@ -1,5 +1,15 @@
 from .audio import NewVolume, Volume
 from .base import APIModel
+from .channels import (
+    AllChannels,
+    Channel,
+    ChannelID,
+    ChannelList,
+    ChannelListID,
+    ChannelShort,
+    CurrentChannel,
+    SetChannel,
+)
 from .general import PowerState
 from .pairing import (
     DeviceInfo,
@@ -12,6 +22,13 @@ from .pairing import (
 
 __all__ = [
     "APIModel",
+    "AllChannels",
+    "Channel",
+    "ChannelID",
+    "ChannelList",
+    "ChannelListID",
+    "ChannelShort",
+    "CurrentChannel",
     "DeviceInfo",
     "NewVolume",
     "PairingAuthInfo",
@@ -20,5 +37,6 @@ __all__ = [
     "PairingRequestResponse",
     "PairingResponse",
     "PowerState",
+    "SetChannel",
     "Volume",
 ]

@@ -2,13 +2,16 @@ from typing import Any, Optional, Type, TypeVar
 
 from .interfaces import PhilipsTVInterface
 from .model import (
+    AllChannels,
     APIModel,
+    CurrentChannel,
     NewVolume,
     PairingGrantPayload,
     PairingRequestPayload,
     PairingRequestResponse,
     PairingResponse,
     PowerState,
+    SetChannel,
     Volume,
 )
 from .types import Credentials
@@ -38,6 +41,15 @@ class PhilipsTVAPI:
 
     def set_volume(self, volume: NewVolume) -> None:
         self._api_post("audio/volume", volume)
+
+    def get_current_channel(self) -> CurrentChannel:
+        return self._api_get_model("activities/tv", CurrentChannel)
+
+    def get_all_channels(self) -> AllChannels:
+        return self._api_get_model("channeldb/tv/channelLists/all", AllChannels)
+
+    def set_channel(self, channel: SetChannel) -> None:
+        self._api_post("activities/tv", channel)
 
     def _api_post_model(
         self, path: str, resp_model: Type[_T], payload: Optional[APIModel] = None

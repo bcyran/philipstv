@@ -26,11 +26,14 @@ class APIObjectMeta(type(BaseModel), type(APIModel)):  # type: ignore [misc]
 
 class APIObject(APIModel, BaseModel, metaclass=APIObjectMeta):
     def dump(self) -> Any:
-        return self.dict()
+        return self.dict(by_alias=True)
 
     @classmethod
     def parse(cls: Type[_SelfAPIObject], raw: Any) -> _SelfAPIObject:
         return cls.parse_obj(raw)
+
+    class Config:
+        allow_population_by_field_name = True
 
 
 class APIEnumMeta(type(Enum), type(APIModel)):  # type: ignore [misc]
