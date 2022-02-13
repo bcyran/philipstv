@@ -33,7 +33,9 @@ class APIObject(APIModel, BaseModel, metaclass=APIObjectMeta):
 
     class Config:
         allow_population_by_field_name = True
+        use_enum_values = True
 
 
 class StrEnum(str, Enum):
-    pass
+    def __str__(self) -> str:
+        return str(self.value)

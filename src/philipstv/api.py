@@ -1,5 +1,7 @@
 from typing import Any, Optional, Type, TypeVar
 
+from philipstv.model.input import InputKey
+
 from .interfaces import PhilipsTVInterface
 from .model import (
     AllChannels,
@@ -53,6 +55,9 @@ class PhilipsTVAPI:
 
     def set_channel(self, channel: SetChannel) -> None:
         self._api_post("activities/tv", channel)
+
+    def input_key(self, key: InputKey) -> None:
+        self._api_post("input/key", key)
 
     def _api_post_model(
         self, path: str, resp_model: Type[_T], payload: Optional[APIModel] = None
