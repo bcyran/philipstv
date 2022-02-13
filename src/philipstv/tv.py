@@ -42,16 +42,16 @@ class PhilipsTV(PhilipsTVInterface):
         self.port = port
         self.url = f"https://{self.host}:{self.port}"
 
-        self.set_auth(auth)
         self._session = self._create_session()
+        self.set_auth(auth)
 
     def set_auth(self, auth: Optional[Credentials]) -> None:
-        self._auth = auth
+        self._session.auth = HTTPDigestAuth(*auth) if auth else None
 
     @_wrap_http_exceptions
     def post(self, path: str, payload: Any = None) -> Any:
         _LOGGER.debug("Request: POST %s %s", path, payload)
-        response = self._session.post(urljoin(self.url, path), json=payload, auth=self._get_auth())
+        response = self._session.post(urljoin(self.url, path), json=payload)
         response.raise_for_status()
         response_body = response.json() if response.content else None
         _LOGGER.debug("Response: %s %s", response.status_code, response_body)
@@ -60,14 +60,11 @@ class PhilipsTV(PhilipsTVInterface):
     @_wrap_http_exceptions
     def get(self, path: str) -> Any:
         _LOGGER.debug("Request: GET %s", path)
-        response = self._session.get(urljoin(self.url, path), auth=self._get_auth())
+        response = self._session.get(urljoin(self.url, path))
         response.raise_for_status()
         response_body = response.json() if response.content else None
         _LOGGER.debug("Response: %s %s", response.status_code, response_body)
         return response_body
-
-    def _get_auth(self) -> Optional[HTTPDigestAuth]:
-        return HTTPDigestAuth(*self._auth) if self._auth else None
 
     @staticmethod
     def _create_session() -> Session:
