@@ -9,6 +9,13 @@ from .ambilight import (
     AmbilightPowerValue,
     AmbilightTopology,
 )
+from .applications import (
+    Application,
+    ApplicationComponent,
+    ApplicationIntent,
+    Applications,
+    ApplicationShort,
+)
 from .audio import CurrentVolume, SetVolume
 from .base import APIModel
 from .channels import (
@@ -44,6 +51,11 @@ __all__ = [
     "AmbilightPower",
     "AmbilightPowerValue",
     "AmbilightTopology",
+    "Application",
+    "ApplicationComponent",
+    "ApplicationIntent",
+    "ApplicationShort",
+    "Applications",
     "Channel",
     "ChannelID",
     "ChannelList",

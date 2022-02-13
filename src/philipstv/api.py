@@ -9,6 +9,8 @@ from .model import (
     AmbilightPower,
     AmbilightTopology,
     APIModel,
+    Applications,
+    ApplicationShort,
     CurrentChannel,
     CurrentVolume,
     InputKey,
@@ -89,6 +91,12 @@ class PhilipsTVAPI:
 
     def set_ambilight_cached(self, colors: AmbilightColorSettings) -> None:
         self._api_post("ambilight/cached", colors)
+
+    def get_applications(self) -> Applications:
+        return self._api_get_model("applications", Applications)
+
+    def launch_application(self, application: ApplicationShort) -> None:
+        self._api_post("activities/launch", application)
 
     def _api_post_model(
         self, path: str, resp_model: Type[_T], payload: Optional[APIModel] = None
