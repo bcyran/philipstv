@@ -1,17 +1,13 @@
-from dataclasses import dataclass
-
-from .base import APIDataClass
+from .base import APIObject
 
 
-@dataclass(frozen=True)
-class Volume(APIDataClass):
+class Volume(APIObject):
     muted: bool
     current: int
     min: int
     max: int
 
 
-@dataclass(frozen=True)
-class NewVolume(APIDataClass):
+class NewVolume(APIObject):
     current: int
     muted: bool = False

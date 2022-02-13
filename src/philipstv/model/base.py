@@ -1,10 +1,11 @@
 from abc import abstractmethod
-from dataclasses import asdict, dataclass
 from enum import Enum
 from typing import Any, Protocol, Type, TypeVar
 
+from pydantic import BaseModel
+
 _SelfModel = TypeVar("_SelfModel", bound="APIModel")
-_SelfAPIDataClass = TypeVar("_SelfAPIDataClass", bound="APIDataClass")
+_SelfAPIObject = TypeVar("_SelfAPIObject", bound="APIObject")
 _SelfAPIEnum = TypeVar("_SelfAPIEnum", bound="APIEnum")
 
 
@@ -19,14 +20,17 @@ class APIModel(Protocol):
         raise NotImplementedError
 
 
-@dataclass(frozen=True)
-class APIDataClass(APIModel):
+class APIObjectMeta(type(BaseModel), type(APIModel)):  # type: ignore [misc]
+    pass
+
+
+class APIObject(APIModel, BaseModel, metaclass=APIObjectMeta):
     def dump(self) -> Any:
-        return asdict(self)
+        return self.dict()
 
     @classmethod
-    def parse(cls: Type[_SelfAPIDataClass], raw: Any) -> _SelfAPIDataClass:
-        return cls(**raw)
+    def parse(cls: Type[_SelfAPIObject], raw: Any) -> _SelfAPIObject:
+        return cls.parse_obj(raw)
 
 
 class APIEnumMeta(type(Enum), type(APIModel)):  # type: ignore [misc]

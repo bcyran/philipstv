@@ -53,6 +53,6 @@ class PhilipsTVPairer:
     def _get_grant_payload(self, pin: str, timestamp: int) -> PairingGrantPayload:
         signature = create_signature(SECRET, f"{timestamp}{pin}".encode()).decode()
         return PairingGrantPayload(
-            auth=PairingAuthInfo(pin, timestamp, signature),
+            auth=PairingAuthInfo(pin=pin, auth_timestamp=timestamp, auth_signature=signature),
             device=self.device_info,
         )

@@ -1,11 +1,9 @@
-from dataclasses import dataclass
 from typing import List, Optional
 
-from .base import APIDataClass
+from .base import APIObject
 
 
-@dataclass(frozen=True)
-class DeviceInfo(APIDataClass):
+class DeviceInfo(APIObject):
     id: str
     device_name: str
     device_os: str
@@ -14,32 +12,27 @@ class DeviceInfo(APIDataClass):
     type: str
 
 
-@dataclass(frozen=True)
-class PairingAuthInfo(APIDataClass):
+class PairingAuthInfo(APIObject):
     pin: str
     auth_timestamp: int
     auth_signature: str
 
 
-@dataclass(frozen=True)
-class PairingRequestPayload(APIDataClass):
+class PairingRequestPayload(APIObject):
     scope: List[str]
     device: DeviceInfo
 
 
-@dataclass(frozen=True)
-class PairingGrantPayload(APIDataClass):
+class PairingGrantPayload(APIObject):
     auth: PairingAuthInfo
     device: DeviceInfo
 
 
-@dataclass(frozen=True)
-class PairingResponse(APIDataClass):
+class PairingResponse(APIObject):
     error_id: str
     error_text: str
 
 
-@dataclass(frozen=True)
 class PairingRequestResponse(PairingResponse):
     auth_key: Optional[str] = None
     timestamp: Optional[int] = None
