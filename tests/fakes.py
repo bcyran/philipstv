@@ -13,7 +13,7 @@ class FakePhilipsTV(PhilipsTVInterface):
     ) -> None:
         self.auth: Optional[Credentials] = None
         self.post_requests: Dict[str, Any] = {}
-        self.get_requests: Set[str]
+        self.get_requests: Set[str] = set()
 
         self.post_responses = post_responses or {}
         self.get_responses = get_responses or {}
