@@ -1,6 +1,6 @@
 from typing import Optional
 
-from philipstv.model import PairingResponse
+from philipstv.api.model import PairingResponse
 
 
 class PhilipsError(Exception):

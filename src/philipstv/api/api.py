@@ -1,6 +1,8 @@
 from typing import Any, Optional, Type, TypeVar
 
-from .interfaces import PhilipsTVInterface
+from philipstv.interfaces import PhilipsTVInterface
+from philipstv.types import Credentials
+
 from .model import (
     AllChannels,
     AmbilightColors,
@@ -22,7 +24,6 @@ from .model import (
     SetChannel,
     Volume,
 )
-from .types import Credentials
 
 _T = TypeVar("_T", bound=APIModel)
 

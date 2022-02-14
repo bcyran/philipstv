@@ -1,7 +1,7 @@
 import pytest
 
 from philipstv import PhilipsTVAPI
-from philipstv.model import (
+from philipstv.api.model import (
     AllChannels,
     AmbilightColor,
     AmbilightColors,
