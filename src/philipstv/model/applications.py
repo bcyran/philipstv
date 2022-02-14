@@ -27,5 +27,5 @@ class Application(ApplicationShort):
 
 
 class Applications(APIObject):
-    version: str
+    version: int
     applications: List[Application]
