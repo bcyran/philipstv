@@ -1,13 +1,13 @@
 from .base import APIObject
 
 
-class CurrentVolume(APIObject):
+class Volume(APIObject):
+    current: int
+    muted: bool = False
+
+
+class CurrentVolume(Volume):
     muted: bool
     current: int
     min: int
     max: int
-
-
-class SetVolume(APIObject):
-    current: int
-    muted: bool = False

@@ -16,7 +16,7 @@ from .applications import (
     Applications,
     ApplicationShort,
 )
-from .audio import CurrentVolume, SetVolume
+from .audio import CurrentVolume, Volume
 from .base import APIModel
 from .channels import (
     AllChannels,
@@ -74,5 +74,5 @@ __all__ = [
     "PowerState",
     "PowerStateValue",
     "SetChannel",
-    "SetVolume",
+    "Volume",
 ]

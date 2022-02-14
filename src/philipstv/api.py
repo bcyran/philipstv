@@ -20,7 +20,7 @@ from .model import (
     PairingResponse,
     PowerState,
     SetChannel,
-    SetVolume,
+    Volume,
 )
 from .types import Credentials
 
@@ -50,7 +50,7 @@ class PhilipsTVAPI:
     def get_volume(self) -> CurrentVolume:
         return self._api_get_model("audio/volume", CurrentVolume)
 
-    def set_volume(self, volume: SetVolume) -> None:
+    def set_volume(self, volume: Volume) -> None:
         self._api_post("audio/volume", volume)
 
     def get_current_channel(self) -> CurrentChannel:
