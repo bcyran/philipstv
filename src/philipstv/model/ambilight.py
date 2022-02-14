@@ -38,18 +38,11 @@ class AmbilightColor(APIObject):
     b: int = Field(ge=0, le=255)
 
 
-class AmbilightPixels(APIObject):
-    __root__: Dict[str, AmbilightColor] = Field(default_factory=dict)
-
-    def __getitem__(self, item: str) -> AmbilightColor:
-        return self.__root__[item]
-
-
 class AmbilightLayer(APIObject):
-    left: AmbilightPixels = Field(default_factory=AmbilightPixels)
-    top: AmbilightPixels = Field(default_factory=AmbilightPixels)
-    right: AmbilightPixels = Field(default_factory=AmbilightPixels)
-    bottom: AmbilightPixels = Field(default_factory=AmbilightPixels)
+    left: Dict[str, AmbilightColor] = Field(default_factory=dict)
+    top: Dict[str, AmbilightColor] = Field(default_factory=dict)
+    right: Dict[str, AmbilightColor] = Field(default_factory=dict)
+    bottom: Dict[str, AmbilightColor] = Field(default_factory=dict)
 
 
 class AmbilightColors(APIObject):
