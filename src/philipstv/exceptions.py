@@ -17,3 +17,7 @@ class PhilipsTVPairingError(PhilipsError):
     def __init__(self, response: PairingResponse) -> None:
         self.response = response
         super().__init__(f"Pairing error: {response.error_id} {response.error_text}")
+
+
+class PhilipsTVRemoteError(PhilipsError):
+    pass
