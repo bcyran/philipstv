@@ -4,7 +4,7 @@ from typing import Optional, Tuple, Union
 
 import click
 
-from philipstv import InputKeyValue, PhilipsTVRemote
+from philipstv import InputKeyValue, PhilipsTVRemote, __version__
 from philipstv.api.model.ambilight import AmbilightColor
 from philipstv.data import HostData, PhilipsTVData
 from philipstv.exceptions import PhilipsTVPairingError, PhilipsTVRemoteError
@@ -81,6 +81,7 @@ pass_tv_context = click.make_pass_decorator(TVContext)
 @click.option(
     "-s", "--save", is_flag=True, default=False, help="Save host, ID and key for future use."
 )
+@click.version_option(__version__, "-v", "--version")
 @click.option("--debug", is_flag=True, default=False, help="Enable debug log.")
 @click.pass_context
 def cli(
