@@ -74,15 +74,16 @@ class TVContext:
 pass_tv_context = click.make_pass_decorator(TVContext)
 
 
-@click.group(context_settings={"help_option_names": ["-h", "--help"]})
+@click.group()
 @click.option("-a", "--host", type=click.STRING, help="TV IP address.")
 @click.option("-i", "--id", type=click.STRING, help="Connecting device ID.")
 @click.option("-k", "--key", type=click.STRING, help="Connecting device secret key.")
 @click.option(
     "-s", "--save", is_flag=True, default=False, help="Save host, ID and key for future use."
 )
+@click.help_option("-h", "--help")
 @click.version_option(__version__, "-v", "--version")
-@click.option("--debug", is_flag=True, default=False, help="Enable debug log.")
+@click.option("-d", "--debug", is_flag=True, default=False, help="Enable debug log.")
 @click.pass_context
 def cli(
     ctx: click.Context,
