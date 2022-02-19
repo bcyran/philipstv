@@ -54,7 +54,7 @@ KEY_MAP = {
     "ambilight": InputKeyValue.AMBILIGHT_ON_OFF,
     "play": InputKeyValue.PLAY_PAUSE,
     "pause": InputKeyValue.PAUSE,
-    "ff": InputKeyValue.FAST_FORWARD,
+    "forward": InputKeyValue.FAST_FORWARD,
     "stop": InputKeyValue.STOP,
     "rewind": InputKeyValue.REWIND,
     "rec": InputKeyValue.RECORD,
