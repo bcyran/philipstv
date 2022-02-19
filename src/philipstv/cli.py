@@ -75,11 +75,13 @@ pass_tv_context = click.make_pass_decorator(TVContext)
 
 
 @click.group(context_settings={"help_option_names": ["-h", "--help"]})
-@click.option("--debug", is_flag=True, default=False, envvar="PHILIPSTV_DEBUG")
 @click.option("-a", "--host", type=click.STRING, help="TV IP address.")
 @click.option("-i", "--id", type=click.STRING, help="Connecting device ID.")
 @click.option("-k", "--key", type=click.STRING, help="Connecting device secret key.")
-@click.option("-s", "--save", is_flag=True, default=False)
+@click.option(
+    "-s", "--save", is_flag=True, default=False, help="Save host, ID and key for future use."
+)
+@click.option("--debug", is_flag=True, default=False, help="Enable debug log.")
 @click.pass_context
 def cli(
     ctx: click.Context,
@@ -89,6 +91,28 @@ def cli(
     save: bool,
     debug: bool,
 ) -> None:
+    """Welcome to philipstv - a CLI remote control for Philips Android-powered TVs.
+
+    Before you will be able to use this program, you need to pair it with your TV. Before starting,
+    ensure your TV is powered on. The simplest way to perform pairing is by running:
+
+    \b
+        philipstv --host IP --save pair
+
+    You will be asked to enter the PIN number displayed on the TV screen. After the pairing process
+    is complete, your credentials will be saved for future use. From now on, you can just use the
+    remote.
+
+    To learn more about usage, just try to run any of the commands listed below, followed by '-h'.
+    You will receive help regarding any subcommands or arguments. Try:
+
+    \b
+        philipstv ambilight -h
+
+    The whole tool can be explored this way.
+
+    Enjoy!
+    """
     log_level = logging.DEBUG if debug else logging.INFO
     logging.basicConfig(level=log_level)
 
@@ -124,7 +148,7 @@ def cli(
     ctx.obj = TVContext(PhilipsTVRemote.new(host, (id, key)), host, id, key, save)
 
 
-@cli.command("pair")
+@cli.command("pair", help="Pair with the TV to obtain credentials.")
 @pass_tv_context
 @click.pass_context
 def pair(ctx: click.Context, tv_ctx: TVContext) -> None:
@@ -145,62 +169,63 @@ def pair(ctx: click.Context, tv_ctx: TVContext) -> None:
         PhilipsTVData(
             last_host=HostData(host=tv_ctx.host, id=credentials[0], key=credentials[1])
         ).save()
+        click.echo("Credentials saved.")
 
 
-@cli.group()
+@cli.group("power", help="Manage power state.")
 def power() -> None:
     pass
 
 
-@power.command("get")
+@power.command("get", help="Get current power state.")
 @pass_tv_context
 def get_power(tv_ctx: TVContext) -> None:
     click.echo("on" if tv_ctx.remote.get_power() else "off")
 
 
-@power.command("set")
+@power.command("set", help="Set power state.")
 @click.argument("power", type=click.Choice(("on", "off")))
 @pass_tv_context
 def set_power(tv_ctx: TVContext, power: str) -> None:
     tv_ctx.remote.set_power(True if power == "on" else False)
 
 
-@cli.group()
+@cli.group("volume", help="Manage audio volume.")
 def volume() -> None:
     pass
 
 
-@volume.command("get")
+@volume.command("get", help="Get current audio volume.")
 @pass_tv_context
 def get_volume(tv_ctx: TVContext) -> None:
     click.echo(tv_ctx.remote.get_volume())
 
 
-@volume.command("set")
+@volume.command("set", help="Set audio volume.")
 @click.argument("volume", type=click.INT)
 @pass_tv_context
 def set_volume(tv_ctx: TVContext, volume: int) -> None:
     tv_ctx.remote.set_volume(volume)
 
 
-@cli.group()
+@cli.group("channel", help="Manage TV channels.")
 def channel() -> None:
     pass
 
 
-@channel.command("get")
+@channel.command("get", help="Get current TV channel.")
 @pass_tv_context
 def get_current_channel(tv_ctx: TVContext) -> None:
     click.echo(tv_ctx.remote.get_current_channel())
 
 
-@channel.command("list")
+@channel.command("list", help="List all available TV channels.")
 @pass_tv_context
 def get_all_channels(tv_ctx: TVContext) -> None:
     click.echo("\n".join(f"{no}\t {chan}" for no, chan in tv_ctx.remote.get_all_channels().items()))
 
 
-@channel.command("set")
+@channel.command("set", help="Set TV channel.")
 @click.argument("channel", type=click.STRING)
 @pass_tv_context
 @click.pass_context
@@ -219,39 +244,44 @@ def set_channel(ctx: click.Context, tv_ctx: TVContext, channel: str) -> None:
 @click.argument("keys", type=click.Choice(tuple(KEY_MAP), case_sensitive=False), nargs=-1)
 @pass_tv_context
 def key(tv_ctx: TVContext, keys: Tuple[str]) -> None:
+    """Emulate pressing keys on the TV remote.
+
+    You can provide any number of key names, separated by a space. They will be sent to the TV in
+    the given order.
+    """
     for key in keys:
         tv_ctx.remote.input_key(KEY_MAP[key])
 
 
-@cli.group()
+@cli.group("ambilight", help="Manage ambilight.")
 def ambilight() -> None:
     pass
 
 
-@ambilight.group("power")
+@ambilight.group("power", help="Manage ambilight power.")
 def ambilight_power() -> None:
     pass
 
 
-@ambilight_power.command("get")
+@ambilight_power.command("get", help="Get current ambilight power state.")
 @pass_tv_context
 def get_ambilight_power(tv_ctx: TVContext) -> None:
     click.echo("on" if tv_ctx.remote.get_ambilight_power() else "off")
 
 
-@ambilight_power.command("set")
+@ambilight_power.command("set", help="Set ambilight power state.")
 @click.argument("power", type=click.Choice(("on", "off")))
 @pass_tv_context
 def set_ambilight_power(tv_ctx: TVContext, power: str) -> None:
     tv_ctx.remote.set_ambilight_power(True if power == "on" else False)
 
 
-@ambilight.group("color")
+@ambilight.group("color", help="Manage ambilight color.")
 def ambilight_color() -> None:
     pass
 
 
-@ambilight_color.command("set")
+@ambilight_color.command("set", help="Set ambilight color.")
 @click.argument("r", type=click.IntRange(0, 255))
 @click.argument("g", type=click.IntRange(0, 255))
 @click.argument("b", type=click.IntRange(0, 255))
@@ -260,18 +290,18 @@ def set_ambilight_color(tv_ctx: TVContext, r: int, g: int, b: int) -> None:
     tv_ctx.remote.set_ambilight_color(AmbilightColor(r=r, g=g, b=b))
 
 
-@cli.group()
+@cli.group("app", help="Manage applications.")
 def app() -> None:
     pass
 
 
-@app.command("list")
+@app.command("list", help="List all available applications.")
 @pass_tv_context
 def list_applications(tv_ctx: TVContext) -> None:
     click.echo("\n".join(tv_ctx.remote.get_applications()))
 
 
-@app.command("launch")
+@app.command("launch", help="Launch an application.")
 @click.argument("application", type=click.STRING)
 @pass_tv_context
 @click.pass_context
