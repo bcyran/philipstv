@@ -1,3 +1,4 @@
+import platform
 from typing import Dict, List, Optional, Union
 
 from philipstv.api.model import (
@@ -6,6 +7,7 @@ from philipstv.api.model import (
     Application,
     Channel,
     ChannelID,
+    DeviceInfo,
     InputKey,
     PowerState,
     PowerStateValue,
@@ -13,7 +15,9 @@ from philipstv.api.model import (
     Volume,
 )
 from philipstv.exceptions import PhilipsTVRemoteError
+from philipstv.pairing import PhilipsTVPairer, PinCallback
 from philipstv.types import Credentials
+from philipstv.utils import create_device_id
 
 from .api import PhilipsTVAPI
 from .api.model import AmbilightColor, InputKeyValue
@@ -29,8 +33,22 @@ class PhilipsTVRemote:
         self._applications_cache: List[Application] = []
 
     @classmethod
-    def new(cls, host: str, auth: Optional[Credentials]) -> "PhilipsTVRemote":
+    def new(cls, host: str, auth: Optional[Credentials] = None) -> "PhilipsTVRemote":
         return cls(PhilipsTVAPI(PhilipsTV(host=host, auth=auth)))
+
+    def pair(self, pin_callback: PinCallback, id: Optional[str] = None) -> Credentials:
+        id = id or create_device_id()
+        uname_info = platform.uname()
+        device_info = DeviceInfo(
+            id=id,
+            device_name=uname_info.node,
+            device_os=uname_info.system,
+            app_id=69,
+            app_name="philipstv",
+            type="native",
+        )
+        pairer = PhilipsTVPairer(self._api, device_info)
+        return pairer.pair(pin_callback)
 
     def get_power(self) -> bool:
         return True if self._api.get_powerstate().powerstate == PowerStateValue.ON else False
