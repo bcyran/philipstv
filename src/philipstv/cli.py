@@ -120,11 +120,11 @@ def cli(
 
     # we need to treat pairing exceptionally
     if ctx.invoked_subcommand == "pair":
-        if not host:
-            raise click.UsageError("No host given (--host).")
-        if key:
-            raise click.UsageError("Option --key is invalid in pairing context.")
-        ctx.obj = TVContext(PhilipsTVRemote.new(host), host, id, None, save)
+        # I'm passing empty string to `PhilipsTVRemote` if no host is given...
+        # This is pretty fucking bad, but I really don't want to make 'remote' field optional
+        # just for this one command
+        # 'pair' HAS TO VALIDATE the 'host' before doing anything!
+        ctx.obj = TVContext(PhilipsTVRemote.new(host or ""), host, id, None, save)
         return
 
     # for all other use cases we need either all data given or none given but saved data available
@@ -154,6 +154,11 @@ def cli(
 @pass_tv_context
 @click.pass_context
 def pair(ctx: click.Context, tv_ctx: TVContext) -> None:
+    if not tv_ctx.host:
+        raise click.UsageError("No host given (--host).")
+    if tv_ctx.key:
+        raise click.UsageError("Option --key is invalid in pairing context.")
+
     def prompt_pin() -> str:
         return str(click.prompt(text="Enter PIN displayed on the TV", type=click.STRING))
 
