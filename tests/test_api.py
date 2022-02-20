@@ -4,7 +4,6 @@ from philipstv import PhilipsTVAPI
 from philipstv.api.model import (
     AllChannels,
     AmbilightColor,
-    AmbilightColors,
     AmbilightLayer,
     AmbilightMode,
     AmbilightModeValue,
@@ -221,14 +220,10 @@ def test_get_ambilight_colors(method: str, endpoint: str) -> None:
 
     result = getattr(PhilipsTVAPI(fake_tv), method)()
 
-    assert result == AmbilightColors(
-        __root__={
-            "layer1": AmbilightLayer(
-                left={"0": AmbilightColor(r=255, g=0, b=0)},
-                top={"0": AmbilightColor(r=0, g=255, b=0), "1": AmbilightColor(r=0, g=0, b=0)},
-                right={"0": AmbilightColor(r=0, g=0, b=255)},
-            )
-        }
+    assert result["layer1"] == AmbilightLayer(
+        left={"0": AmbilightColor(r=255, g=0, b=0)},
+        top={"0": AmbilightColor(r=0, g=255, b=0), "1": AmbilightColor(r=0, g=0, b=0)},
+        right={"0": AmbilightColor(r=0, g=0, b=255)},
     )
 
 
