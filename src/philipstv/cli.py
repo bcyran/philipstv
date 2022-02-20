@@ -126,7 +126,7 @@ def cli(
         # This is pretty fucking bad, but I really don't want to make 'remote' field optional
         # just for this one command
         # 'pair' HAS TO VALIDATE the 'host' before doing anything!
-        ctx.obj = TVContext(PhilipsTVRemote.new(host or ""), host, id, None, save)
+        ctx.obj = TVContext(PhilipsTVRemote.new(host or ""), host, id, key, save)
         return
 
     # for all other use cases we need either all data given or none given but saved data available
@@ -231,7 +231,7 @@ def get_current_channel(tv_ctx: TVContext) -> None:
 @channel.command("list", help="List all available TV channels.")
 @pass_tv_context
 def get_all_channels(tv_ctx: TVContext) -> None:
-    click.echo("\n".join(f"{no}\t {chan}" for no, chan in tv_ctx.remote.get_all_channels().items()))
+    click.echo("\n".join(f"{no}\t{chan}" for no, chan in tv_ctx.remote.get_all_channels().items()))
 
 
 @channel.command("set", help="Set TV channel.")
