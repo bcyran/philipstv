@@ -1,16 +1,8 @@
 import hmac
-import platform
 import random
 import string
-import subprocess
 from base64 import b64encode
 from hashlib import sha256
-
-
-def ping(host: str) -> bool:
-    arg = "-n" if platform.system().lower() == "windows" else "-c"
-    command = ["ping", arg, "1", host]
-    return subprocess.call(command) == 0
 
 
 def create_device_id() -> str:
