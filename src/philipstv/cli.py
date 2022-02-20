@@ -188,14 +188,14 @@ def power() -> None:
 
 @power.command("get", help="Get current power state.")
 @pass_tv_context
-def get_power(tv_ctx: TVContext) -> None:
+def power_get(tv_ctx: TVContext) -> None:
     click.echo("on" if tv_ctx.remote.get_power() else "off")
 
 
 @power.command("set", help="Set power state.")
 @click.argument("power", type=click.Choice(("on", "off")))
 @pass_tv_context
-def set_power(tv_ctx: TVContext, power: str) -> None:
+def power_set(tv_ctx: TVContext, power: str) -> None:
     tv_ctx.remote.set_power(True if power == "on" else False)
 
 
@@ -206,14 +206,14 @@ def volume() -> None:
 
 @volume.command("get", help="Get current audio volume.")
 @pass_tv_context
-def get_volume(tv_ctx: TVContext) -> None:
+def volume_get(tv_ctx: TVContext) -> None:
     click.echo(tv_ctx.remote.get_volume())
 
 
 @volume.command("set", help="Set audio volume.")
 @click.argument("volume", type=click.INT)
 @pass_tv_context
-def set_volume(tv_ctx: TVContext, volume: int) -> None:
+def volume_set(tv_ctx: TVContext, volume: int) -> None:
     tv_ctx.remote.set_volume(volume)
 
 
@@ -224,13 +224,13 @@ def channel() -> None:
 
 @channel.command("get", help="Get current TV channel.")
 @pass_tv_context
-def get_current_channel(tv_ctx: TVContext) -> None:
+def channel_get(tv_ctx: TVContext) -> None:
     click.echo(tv_ctx.remote.get_current_channel())
 
 
 @channel.command("list", help="List all available TV channels.")
 @pass_tv_context
-def get_all_channels(tv_ctx: TVContext) -> None:
+def channel_list(tv_ctx: TVContext) -> None:
     click.echo("\n".join(f"{no}\t{chan}" for no, chan in tv_ctx.remote.get_all_channels().items()))
 
 
@@ -238,7 +238,7 @@ def get_all_channels(tv_ctx: TVContext) -> None:
 @click.argument("channel", type=click.STRING)
 @pass_tv_context
 @click.pass_context
-def set_channel(ctx: click.Context, tv_ctx: TVContext, channel: str) -> None:
+def channel_set(ctx: click.Context, tv_ctx: TVContext, channel: str) -> None:
     set_channel: Union[str, int] = channel
     if channel.isdigit():
         set_channel = int(set_channel)
@@ -274,14 +274,14 @@ def ambilight_power() -> None:
 
 @ambilight_power.command("get", help="Get current ambilight power state.")
 @pass_tv_context
-def get_ambilight_power(tv_ctx: TVContext) -> None:
+def ambilight_power_get(tv_ctx: TVContext) -> None:
     click.echo("on" if tv_ctx.remote.get_ambilight_power() else "off")
 
 
 @ambilight_power.command("set", help="Set ambilight power state.")
 @click.argument("power", type=click.Choice(("on", "off")))
 @pass_tv_context
-def set_ambilight_power(tv_ctx: TVContext, power: str) -> None:
+def ambilight_power_set(tv_ctx: TVContext, power: str) -> None:
     tv_ctx.remote.set_ambilight_power(True if power == "on" else False)
 
 
@@ -295,7 +295,7 @@ def ambilight_color() -> None:
 @click.argument("g", type=click.IntRange(0, 255))
 @click.argument("b", type=click.IntRange(0, 255))
 @pass_tv_context
-def set_ambilight_color(tv_ctx: TVContext, r: int, g: int, b: int) -> None:
+def ambilight_color_set(tv_ctx: TVContext, r: int, g: int, b: int) -> None:
     tv_ctx.remote.set_ambilight_color(AmbilightColor(r=r, g=g, b=b))
 
 
@@ -306,7 +306,7 @@ def app() -> None:
 
 @app.command("list", help="List all available applications.")
 @pass_tv_context
-def list_applications(tv_ctx: TVContext) -> None:
+def app_list(tv_ctx: TVContext) -> None:
     click.echo("\n".join(tv_ctx.remote.get_applications()))
 
 
@@ -314,7 +314,7 @@ def list_applications(tv_ctx: TVContext) -> None:
 @click.argument("application", type=click.STRING)
 @pass_tv_context
 @click.pass_context
-def launch_application(ctx: click.Context, tv_ctx: TVContext, application: str) -> None:
+def app_launch(ctx: click.Context, tv_ctx: TVContext, application: str) -> None:
     try:
         tv_ctx.remote.launch_application(application)
     except PhilipsTVRemoteError as err:
