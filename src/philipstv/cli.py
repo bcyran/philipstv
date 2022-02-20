@@ -97,22 +97,18 @@ def cli(
 ) -> None:
     """Welcome to philipstv - a CLI remote control for Philips Android-powered TVs.
 
-    Before you will be able to use this program, you need to pair it with your TV. Before starting,
+    Before you will be able to use this program, you need to pair it with your TV. For this,
     ensure your TV is powered on. The simplest way to perform pairing is by running:
 
     \b
         philipstv --host IP --save pair
 
-    You will be asked to enter the PIN number displayed on the TV screen. After the pairing process
-    is complete, your credentials will be saved for future use. From now on, you can just use the
-    remote.
-
-    To learn more about usage, just try to run any of the commands listed below, followed by '-h'.
-    You will receive help regarding any subcommands or arguments. Try:
+    To learn more about pairing process run:
 
     \b
-        philipstv ambilight -h
+        philipstv pair -h
 
+    In fact, you can learn more about every command by running it, followed by '-h'.
     The whole tool can be explored this way.
 
     Enjoy!
@@ -152,10 +148,34 @@ def cli(
     ctx.obj = TVContext(PhilipsTVRemote.new(host, (id, key)), host, id, key, save)
 
 
-@cli.command("pair", help="Pair with the TV to obtain credentials.")
+@cli.command("pair")
 @pass_tv_context
 @click.pass_context
 def pair(ctx: click.Context, tv_ctx: TVContext) -> None:
+    """Pair with the TV to obtain authentication credentials.
+
+    In order to perform pairing, you have to provide the TV IP address (--host option).
+    You can find it in the TV's network settings. Look for something like "Show network
+    configuration".
+
+    Additionally, you can also provide device ID (--id), which will be later used during
+    authentication. If device ID is not provided, random 16 characters long alphanumeric string
+    will be generated.
+
+    During pairing you will be prompted to enter the PIN number displayed on the TV screen.
+
+    After successful pairing, your credentials will be displayed. If you don't want to enter them
+    every time you run any command, you can pass (--save) option. This will save the credentials
+    in a file. Saved credentials will be automatically used in future, unless other credentials are
+    explicitly provided.
+
+    \b
+    Example valid pairing commands:
+        philipstv --host IP pair
+        philipstv --host IP --id ID pair
+        philipstv --host IP --id ID --save pair
+
+    """
     if not tv_ctx.host:
         raise click.UsageError("No host given (--host).")
     if tv_ctx.key:
