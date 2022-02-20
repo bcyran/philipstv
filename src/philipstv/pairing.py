@@ -4,8 +4,8 @@ from typing import Callable
 
 from philipstv.interfaces import PhilipsTVPairingAPI
 
-from .api.model import DeviceInfo, PairingAuthInfo, PairingGrantPayload, PairingRequestPayload
 from .exceptions import PhilipsTVPairingError
+from .model import DeviceInfo, PairingAuthInfo, PairingGrantPayload, PairingRequestPayload
 from .types import Credentials
 from .utils import create_signature
 

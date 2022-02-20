@@ -5,7 +5,7 @@ import pytest
 from pytest import MonkeyPatch
 
 from philipstv import PhilipsTVAPI, PhilipsTVRemote, PhilipsTVRemoteError
-from philipstv.api.model import (
+from philipstv.model import (
     AllChannels,
     AmbilightColor,
     AmbilightPower,
@@ -20,14 +20,14 @@ from philipstv.api.model import (
     ChannelShort,
     CurrentChannel,
     CurrentVolume,
+    DeviceInfo,
     InputKey,
+    InputKeyValue,
     PowerState,
     PowerStateValue,
     SetChannel,
     Volume,
 )
-from philipstv.api.model.input import InputKeyValue
-from philipstv.api.model.pairing import DeviceInfo
 from philipstv.pairing import PhilipsTVPairer
 
 CHANNELS = AllChannels(

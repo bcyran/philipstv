@@ -1,6 +1,6 @@
 from .api import PhilipsTVAPI
-from .api.model import DeviceInfo
 from .exceptions import PhilipsError, PhilipsTVError, PhilipsTVPairingError, PhilipsTVRemoteError
+from .model import DeviceInfo
 from .pairing import PhilipsTVPairer
 from .remote import AmbilightColor, InputKeyValue, PhilipsTVRemote
 from .tv import PhilipsTV

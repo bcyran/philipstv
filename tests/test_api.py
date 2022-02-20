@@ -3,7 +3,7 @@ from unittest.mock import create_autospec
 import pytest
 
 from philipstv import PhilipsTV, PhilipsTVAPI
-from philipstv.api.model import (
+from philipstv.model import (
     AllChannels,
     AmbilightColor,
     AmbilightLayer,

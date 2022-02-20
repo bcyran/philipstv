@@ -5,9 +5,9 @@ from typing import Optional, Tuple, Union
 import click
 
 from philipstv import InputKeyValue, PhilipsTVRemote, __version__
-from philipstv.api.model.ambilight import AmbilightColor
 from philipstv.data import HostData, PhilipsTVData
 from philipstv.exceptions import PhilipsTVPairingError, PhilipsTVRemoteError
+from philipstv.model import AmbilightColor
 
 _LOGGER = logging.getLogger(__name__)
 

@@ -1,7 +1,7 @@
 from abc import abstractmethod
 from typing import Any, Optional, Protocol
 
-from .api.model import (
+from .model import (
     PairingGrantPayload,
     PairingRequestPayload,
     PairingRequestResponse,

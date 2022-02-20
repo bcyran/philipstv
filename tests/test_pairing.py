@@ -3,7 +3,7 @@ from unittest.mock import create_autospec
 import pytest
 
 from philipstv import DeviceInfo, PhilipsTVAPI, PhilipsTVPairer, PhilipsTVPairingError
-from philipstv.api.model import (
+from philipstv.model import (
     PairingAuthInfo,
     PairingGrantPayload,
     PairingRequestPayload,

@@ -8,9 +8,9 @@ from click.testing import CliRunner, Result
 from pytest import MonkeyPatch
 
 from philipstv import AmbilightColor, InputKeyValue, PhilipsTVPairingError, PhilipsTVRemote
-from philipstv.api.model.pairing import PairingResponse
 from philipstv.cli import cli
 from philipstv.exceptions import PhilipsTVRemoteError
+from philipstv.model import PairingResponse
 from philipstv.types import Credentials
 
 
