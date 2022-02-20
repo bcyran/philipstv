@@ -38,5 +38,4 @@ class APIObject(APIModel, BaseModel, metaclass=APIObjectMeta):
 
 
 class StrEnum(str, Enum):
-    def __str__(self) -> str:
-        return str(self.value)
+    pass
