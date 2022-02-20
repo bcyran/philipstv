@@ -4,10 +4,12 @@ from typing import Optional, Tuple, Union
 
 import click
 
-from philipstv import InputKeyValue, PhilipsTVRemote, __version__
-from philipstv.data import HostData, PhilipsTVData
-from philipstv.exceptions import PhilipsTVPairingError, PhilipsTVRemoteError
-from philipstv.model import AmbilightColor
+from philipstv import __version__
+
+from ._data import HostData, PhilipsTVData
+from .exceptions import PhilipsTVPairingError, PhilipsTVRemoteError
+from .model import AmbilightColor, InputKeyValue
+from .remote import PhilipsTVRemote
 
 _LOGGER = logging.getLogger(__name__)
 

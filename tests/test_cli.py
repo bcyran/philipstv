@@ -7,22 +7,27 @@ import pytest
 from click.testing import CliRunner, Result
 from pytest import MonkeyPatch
 
-from philipstv import AmbilightColor, InputKeyValue, PhilipsTVPairingError, PhilipsTVRemote
-from philipstv.cli import cli
-from philipstv.exceptions import PhilipsTVRemoteError
+from philipstv import (
+    AmbilightColor,
+    InputKeyValue,
+    PhilipsTVPairingError,
+    PhilipsTVRemote,
+    PhilipsTVRemoteError,
+)
+from philipstv._cli import cli
 from philipstv.model import PairingResponse
 from philipstv.types import Credentials
 
 
 @pytest.fixture(autouse=True)
 def no_saved_data(monkeypatch: MonkeyPatch) -> None:
-    monkeypatch.setattr("philipstv.data.DATA_FILE", Path("/shurelythiscannotexist"))
+    monkeypatch.setattr("philipstv._data.DATA_FILE", Path("/shurelythiscannotexist"))
 
 
 @pytest.fixture
 def data_file(monkeypatch: MonkeyPatch, tmp_path: Path) -> Path:
     data_file = tmp_path / "data.json"
-    monkeypatch.setattr("philipstv.data.DATA_FILE", data_file)
+    monkeypatch.setattr("philipstv._data.DATA_FILE", data_file)
     return data_file
 
 
@@ -30,7 +35,7 @@ def data_file(monkeypatch: MonkeyPatch, tmp_path: Path) -> Path:
 def remote(monkeypatch: MonkeyPatch) -> Mock:
     mock_remote = create_autospec(PhilipsTVRemote)
     mock_remote.new.return_value = mock_remote
-    monkeypatch.setattr("philipstv.cli.PhilipsTVRemote", mock_remote)
+    monkeypatch.setattr("philipstv._cli.PhilipsTVRemote", mock_remote)
     return mock_remote  # type: ignore
 
 

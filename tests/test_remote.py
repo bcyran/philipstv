@@ -4,7 +4,7 @@ from unittest.mock import Mock, create_autospec
 import pytest
 from pytest import MonkeyPatch
 
-from philipstv import PhilipsTVAPI, PhilipsTVRemote, PhilipsTVRemoteError
+from philipstv import PhilipsTVAPI, PhilipsTVPairer, PhilipsTVRemote, PhilipsTVRemoteError
 from philipstv.model import (
     AllChannels,
     AmbilightColor,
@@ -28,7 +28,6 @@ from philipstv.model import (
     SetChannel,
     Volume,
 )
-from philipstv.pairing import PhilipsTVPairer
 
 CHANNELS = AllChannels(
     version=1,

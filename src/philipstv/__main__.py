@@ -3,7 +3,7 @@ import sys
 
 def wrapped_cli() -> None:
     try:
-        from .cli import cli
+        from ._cli import cli
     except ModuleNotFoundError:
         print("CLI dependencies missing!", file=sys.stderr, flush=True)
         print("Please install the package as 'philipstv[cli]'.", file=sys.stderr, flush=True)

@@ -2,7 +2,7 @@ from typing import List
 
 from pydantic import Field
 
-from .base import APIObject
+from ._base import APIObject
 
 
 class ChannelID(APIObject):

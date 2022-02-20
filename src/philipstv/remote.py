@@ -1,12 +1,9 @@
 import platform
 from typing import Dict, List, Optional, Union
 
-from philipstv.exceptions import PhilipsTVRemoteError
-from philipstv.pairing import PhilipsTVPairer, PinCallback
-from philipstv.types import Credentials
-from philipstv.utils import create_device_id
-
+from ._utils import create_device_id
 from .api import PhilipsTVAPI
+from .exceptions import PhilipsTVRemoteError
 from .model import (
     AmbilightColor,
     AmbilightPower,
@@ -22,7 +19,9 @@ from .model import (
     SetChannel,
     Volume,
 )
+from .pairing import PhilipsTVPairer, PinCallback
 from .tv import PhilipsTV
+from .types import Credentials
 
 __all__ = ["AmbilightColor", "InputKeyValue", "PhilipsTVRemote"]
 

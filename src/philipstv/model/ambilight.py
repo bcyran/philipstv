@@ -2,7 +2,7 @@ from typing import Dict, Union
 
 from pydantic.fields import Field
 
-from .base import APIObject, StrEnum
+from ._base import APIObject, StrEnum
 
 
 class AmbilightPowerValue(StrEnum):

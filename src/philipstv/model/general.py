@@ -1,4 +1,4 @@
-from .base import APIObject, StrEnum
+from ._base import APIObject, StrEnum
 
 
 class PowerStateValue(StrEnum):

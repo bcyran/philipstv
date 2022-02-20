@@ -3,6 +3,7 @@ from unittest.mock import create_autospec
 import pytest
 
 from philipstv import DeviceInfo, PhilipsTVAPI, PhilipsTVPairer, PhilipsTVPairingError
+from philipstv._utils import create_signature
 from philipstv.model import (
     PairingAuthInfo,
     PairingGrantPayload,
@@ -10,8 +11,7 @@ from philipstv.model import (
     PairingRequestResponse,
     PairingResponse,
 )
-from philipstv.pairing import SECRET
-from philipstv.utils import create_signature
+from philipstv.pairing import _SECRET
 
 DEVICE_INFO = DeviceInfo(
     id="<device_id>",
@@ -21,7 +21,7 @@ DEVICE_INFO = DeviceInfo(
     app_name="<app_name>",
     type="<type>",
 )
-SIGNATURE = create_signature(SECRET, "12345<pin>".encode()).decode()
+SIGNATURE = create_signature(_SECRET, "12345<pin>".encode()).decode()
 REQUEST_REPONSE_OK = PairingRequestResponse(
     error_id="SUCCESS",
     error_text="Authorization required",

@@ -1,3 +1,4 @@
+from ._base import APIModel
 from .ambilight import (
     AmbilightColor,
     AmbilightColors,
@@ -17,7 +18,6 @@ from .applications import (
     ApplicationShort,
 )
 from .audio import CurrentVolume, Volume
-from .base import APIModel
 from .channels import (
     AllChannels,
     Channel,

@@ -8,8 +8,8 @@ from requests import HTTPError, Session
 from requests.auth import HTTPDigestAuth
 from urllib3.exceptions import InsecureRequestWarning
 
+from ._interfaces import PhilipsTVInterface
 from .exceptions import PhilipsTVError
-from .interfaces import PhilipsTVInterface
 from .types import Credentials
 
 urllib3.disable_warnings(InsecureRequestWarning)  # type: ignore

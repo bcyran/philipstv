@@ -1,7 +1,7 @@
 from typing import Any, Dict, Optional, Set
 
+from philipstv._interfaces import PhilipsTVInterface
 from philipstv.exceptions import PhilipsTVError
-from philipstv.interfaces import PhilipsTVInterface
 from philipstv.types import Credentials
 
 

@@ -2,16 +2,15 @@ import logging
 from base64 import b64decode
 from typing import Callable
 
-from philipstv.interfaces import PhilipsTVPairingAPI
-
+from ._interfaces import PhilipsTVPairingAPI
+from ._utils import create_signature
 from .exceptions import PhilipsTVPairingError
 from .model import DeviceInfo, PairingAuthInfo, PairingGrantPayload, PairingRequestPayload
 from .types import Credentials
-from .utils import create_signature
 
 LOGGER = logging.getLogger(__name__)
 
-SECRET = b64decode(
+_SECRET = b64decode(
     "JCqdN5AcnAHgJYseUn7ER5k3qgtemfUvMRghQpTfTZq7Cvv8EPQPqfz6dDxPQPSu4gKFPWkJGw32zyASgJkHwCjU"
 )
 
@@ -51,7 +50,7 @@ class PhilipsTVPairer:
         )
 
     def _get_grant_payload(self, pin: str, timestamp: int) -> PairingGrantPayload:
-        signature = create_signature(SECRET, f"{timestamp}{pin}".encode()).decode()
+        signature = create_signature(_SECRET, f"{timestamp}{pin}".encode()).decode()
         return PairingGrantPayload(
             auth=PairingAuthInfo(pin=pin, auth_timestamp=timestamp, auth_signature=signature),
             device=self.device_info,
