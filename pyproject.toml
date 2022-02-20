@@ -8,7 +8,7 @@ authors = ["Bazyli Cyran <bazyli.cyran@gmail.com>"]
 philipstv = "philipstv.__main__:wrapped_cli"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.9"
 requests = "^2.27.1"
 pydantic = "^1.9.0"
 click = { version = "^8.0.3", optional = true }
