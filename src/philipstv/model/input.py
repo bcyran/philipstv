@@ -7,7 +7,7 @@ class InputKeyValue(StrEnum):
     FIND = "Find"
     RED = "RedColour"
     GREEN = "GreenColour"
-    YELLOW = "YelloColour"
+    YELLOW = "YellowColour"
     BLUE = "BlueColour"
     HOME = "Home"
     VOLUME_UP = "VolumeUp"
