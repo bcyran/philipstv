@@ -2,6 +2,7 @@ from typing import Union
 from unittest.mock import Mock, create_autospec
 
 import pytest
+from pytest import MonkeyPatch
 
 from philipstv import PhilipsTVAPI, PhilipsTVRemote, PhilipsTVRemoteError
 from philipstv.api.model import (
@@ -26,6 +27,8 @@ from philipstv.api.model import (
     Volume,
 )
 from philipstv.api.model.input import InputKeyValue
+from philipstv.api.model.pairing import DeviceInfo
+from philipstv.pairing import PhilipsTVPairer
 
 CHANNELS = AllChannels(
     version=1,
@@ -95,6 +98,36 @@ APPLICATIONS = Applications(
 @pytest.fixture
 def api_mock() -> Mock:
     return create_autospec(PhilipsTVAPI, spec_set=True, instance=True)  # type: ignore
+
+
+def test_pair(api_mock: Mock, monkeypatch: MonkeyPatch) -> None:
+    given_id = "<id>"
+    pairer_mock = create_autospec(PhilipsTVPairer)
+    pairer_mock.return_value = pairer_mock
+    monkeypatch.setattr("philipstv.remote.PhilipsTVPairer", pairer_mock)
+
+    def fake_callback() -> str:
+        return "str"
+
+    PhilipsTVRemote(api_mock).pair(fake_callback, given_id)
+
+    pairer_mock.pair.assert_called_once_with(fake_callback)
+    device_info = pairer_mock.call_args.args[1]
+    assert isinstance(device_info, DeviceInfo)
+    assert device_info.id == given_id
+
+
+def test_pair_no_id(api_mock: Mock, monkeypatch: MonkeyPatch) -> None:
+    pairer_mock = create_autospec(PhilipsTVPairer)
+    pairer_mock.return_value = pairer_mock
+    monkeypatch.setattr("philipstv.remote.PhilipsTVPairer", pairer_mock)
+
+    PhilipsTVRemote(api_mock).pair(lambda: "str")
+
+    device_info = pairer_mock.call_args.args[1]
+    assert isinstance(device_info, DeviceInfo)
+    assert device_info.id.isalnum()
+    assert len(device_info.id) == 16
 
 
 def test_get_power(api_mock: Mock) -> None:
