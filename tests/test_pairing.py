@@ -1,11 +1,17 @@
-from typing import Any, Dict
+from unittest.mock import create_autospec
 
 import pytest
 
 from philipstv import DeviceInfo, PhilipsTVAPI, PhilipsTVPairer, PhilipsTVPairingError
+from philipstv.api.model import (
+    PairingAuthInfo,
+    PairingGrantPayload,
+    PairingRequestPayload,
+    PairingRequestResponse,
+    PairingResponse,
+)
 from philipstv.pairing import SECRET
 from philipstv.utils import create_signature
-from tests.fakes import FakePhilipsTV
 
 DEVICE_INFO = DeviceInfo(
     id="<device_id>",
@@ -16,74 +22,60 @@ DEVICE_INFO = DeviceInfo(
     type="<type>",
 )
 SIGNATURE = create_signature(SECRET, "12345<pin>".encode()).decode()
-
-RESPONSES_HAPPY_PATH: Dict[str, Dict[str, Any]] = {
-    "6/pair/request": {
-        "error_id": "SUCCESS",
-        "error_text": "Authorization required",
-        "auth_key": "<key>",
-        "timestamp": 12345,
-        "timeout": 60,
-    },
-    "6/pair/grant": {
-        "error_id": "SUCCESS",
-        "error_text": "Pairing completed",
-    },
-}
-RESPONSES_REQUEST_ERROR = {
-    "6/pair/request": {
-        "error_id": "CONCURRENT_PAIRING",
-        "error_text": "Another pairing is in process",
-    },
-}
-RESPONSES_CONFIRM_ERROR = {
-    "6/pair/grant": {
-        "error_id": "INVALID_PIN",
-        "error_text": "Invalid authentication parameters",
-    },
-}
+REQUEST_REPONSE_OK = PairingRequestResponse(
+    error_id="SUCCESS",
+    error_text="Authorization required",
+    auth_key="<key>",
+    timestamp=12345,
+    timeout=60,
+)
+GRANT_RESPONSE_OK = PairingResponse(
+    error_id="SUCCESS",
+    error_text="Pairing completed",
+)
+REQUEST_REPONSE_ERR = PairingResponse(
+    error_id="CONCURRENT_PAIRING",
+    error_text="Another pairing is in process",
+)
+GRANT_RESPONSE_ERR = PairingResponse(
+    error_id="INVALID_PIN",
+    error_text="Invalid authentication parameters",
+)
 
 
 def test_pair_happy_path() -> None:
-    fake_tv = FakePhilipsTV(RESPONSES_HAPPY_PATH)
-    pairer = PhilipsTVPairer(PhilipsTVAPI(fake_tv), DEVICE_INFO)
+    api_mock = create_autospec(PhilipsTVAPI)
+    api_mock.pair_request.return_value = REQUEST_REPONSE_OK
+    api_mock.pair_grant.return_value = GRANT_RESPONSE_OK
 
-    actual_credentials = pairer.pair(lambda: "<pin>")
+    credentials = PhilipsTVPairer(api_mock, DEVICE_INFO).pair(lambda: "<pin>")
 
-    assert fake_tv.post_requests["6/pair/request"] == {
-        "scope": ["read", "write", "control"],
-        "device": DEVICE_INFO.dump(),
-    }
-
-    assert fake_tv.post_requests["6/pair/grant"] == {
-        "auth": {
-            "pin": "<pin>",
-            "auth_timestamp": 12345,
-            "auth_signature": SIGNATURE,
-        },
-        "device": DEVICE_INFO.dump(),
-    }
-    assert actual_credentials == ("<device_id>", "<key>")
+    api_mock.pair_request.assert_called_once_with(
+        PairingRequestPayload(scope=["read", "write", "control"], device=DEVICE_INFO)
+    )
+    api_mock.pair_grant.assert_called_once_with(
+        PairingGrantPayload(
+            auth=PairingAuthInfo(pin="<pin>", auth_timestamp=12345, auth_signature=SIGNATURE),
+            device=DEVICE_INFO,
+        )
+    )
+    assert credentials == ("<device_id>", "<key>")
 
 
 @pytest.mark.parametrize(
-    "responses, expected_message",
+    "pair_response, grant_response, expected_message",
     [
-        pytest.param(
-            {**RESPONSES_HAPPY_PATH, **RESPONSES_REQUEST_ERROR},
-            ".*CONCURRENT_PAIRING.*",
-            id="concurrent pairing",
-        ),
-        pytest.param(
-            {**RESPONSES_HAPPY_PATH, **RESPONSES_CONFIRM_ERROR},
-            ".*INVALID_PIN.*",
-            id="invalid pin",
-        ),
+        (REQUEST_REPONSE_ERR, GRANT_RESPONSE_OK, ".*CONCURRENT_PAIRING.*"),
+        (REQUEST_REPONSE_OK, GRANT_RESPONSE_ERR, ".*INVALID_PIN.*"),
     ],
 )
-def test_pair_error(responses: Dict[str, Any], expected_message: str) -> None:
-    fake_tv = FakePhilipsTV(responses)
-    pairer = PhilipsTVPairer(PhilipsTVAPI(fake_tv), DEVICE_INFO)
+def test_pair_error(
+    pair_response: PairingResponse, grant_response: PairingResponse, expected_message: str
+) -> None:
+    api_mock = create_autospec(PhilipsTVAPI)
+    api_mock.pair_request.return_value = pair_response
+    api_mock.pair_grant.return_value = grant_response
+    pairer = PhilipsTVPairer(api_mock, DEVICE_INFO)
 
     with pytest.raises(PhilipsTVPairingError, match=expected_message):
         pairer.pair(lambda: "<pin>")

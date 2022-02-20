@@ -1,6 +1,8 @@
+from unittest.mock import create_autospec
+
 import pytest
 
-from philipstv import PhilipsTVAPI
+from philipstv import PhilipsTV, PhilipsTVAPI
 from philipstv.api.model import (
     AllChannels,
     AmbilightColor,
@@ -21,14 +23,98 @@ from philipstv.api.model import (
     ChannelShort,
     CurrentChannel,
     CurrentVolume,
+    DeviceInfo,
     InputKey,
     InputKeyValue,
+    PairingAuthInfo,
+    PairingGrantPayload,
+    PairingRequestPayload,
+    PairingRequestResponse,
+    PairingResponse,
     PowerState,
     PowerStateValue,
     SetChannel,
     Volume,
 )
 from tests.fakes import FakePhilipsTV
+
+DEVICE_INFO = DeviceInfo(
+    id="<device_id>",
+    device_name="<device_name>",
+    device_os="<device_os>",
+    app_id="<app_id>",
+    app_name="<app_name>",
+    type="<type>",
+)
+
+
+def test_set_auth() -> None:
+    tv_mock = create_autospec(PhilipsTV)
+
+    PhilipsTVAPI(tv_mock).set_auth(("<id>", "<key>"))
+
+    tv_mock.set_auth.assert_called_once_with(("<id>", "<key>"))
+
+
+def test_pair_request() -> None:
+    fake_tv = FakePhilipsTV(
+        post_responses={
+            "6/pair/request": {
+                "error_id": "SUCCESS",
+                "error_text": "Authorization required",
+                "auth_key": "<key>",
+                "timestamp": 12345,
+                "timeout": 60,
+            }
+        }
+    )
+
+    result = PhilipsTVAPI(fake_tv).pair_request(
+        PairingRequestPayload(scope=["read", "write", "control"], device=DEVICE_INFO)
+    )
+
+    assert fake_tv.post_requests["6/pair/request"] == {
+        "scope": ["read", "write", "control"],
+        "device": DEVICE_INFO.dump(),
+    }
+    assert result == PairingRequestResponse(
+        error_id="SUCCESS",
+        error_text="Authorization required",
+        auth_key="<key>",
+        timestamp=12345,
+        timeout=60,
+    )
+
+
+def test_pair_grant() -> None:
+    fake_tv = FakePhilipsTV(
+        post_responses={
+            "6/pair/grant": {
+                "error_id": "SUCCESS",
+                "error_text": "Pairing completed",
+            }
+        }
+    )
+
+    result = PhilipsTVAPI(fake_tv).pair_grant(
+        PairingGrantPayload(
+            auth=PairingAuthInfo(pin="<pin>", auth_timestamp=12345, auth_signature="<signature>"),
+            device=DEVICE_INFO,
+        )
+    )
+
+    assert fake_tv.post_requests["6/pair/grant"] == {
+        "auth": {
+            "pin": "<pin>",
+            "auth_timestamp": 12345,
+            "auth_signature": "<signature>",
+        },
+        "device": DEVICE_INFO.dump(),
+    }
+    assert result == PairingResponse(
+        error_id="SUCCESS",
+        error_text="Pairing completed",
+    )
 
 
 def test_get_powerstate() -> None:
