@@ -37,3 +37,5 @@ jobs:
       run: pip install tox tox-poetry poetry
     - name: Unittests
       run: tox -e ut
+    - name: Upload coverage
+      uses: codecov/codecov-action@v1
