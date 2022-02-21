@@ -27,16 +27,59 @@ __all__ = ["AmbilightColor", "InputKeyValue", "PhilipsTVRemote"]
 
 
 class PhilipsTVRemote:
+    """High level interface to the TV.
+
+    Wraps the API into convenient methods simulating functions that could be found on a TV remote.
+
+    Can be used either with existing :class:`PhilipsTVAPI` instance, or create it itself.
+    In the following example ``remote_one`` and ``remote_two`` are equivalent::
+
+        api = PhilipsTVAPI(PhilipsTV("192.169.0.100", auth=("id", "key")))
+        remote_one = PhilipsTVRemote(api)
+        remote_two = PhilipsTVRemote.new("192.168.0.100", ("id", "key"))
+
+    """
+
     def __init__(self, api: PhilipsTVAPI) -> None:
+        """
+        Args:
+            api: Instance of an API to be used by the remote.
+
+        """
         self._api = api
         self._channels_cache: List[Channel] = []
         self._applications_cache: List[Application] = []
 
     @classmethod
     def new(cls, host: str, auth: Optional[Credentials] = None) -> "PhilipsTVRemote":
+        """Creates a new remote for given host without the need to inject:class:`PhilipsTVAPI`
+        instance.
+
+        Args:
+            host: IP address of the TV.
+            auth: Authentication credentials. If not given, the only feature you will be able to
+                use is pairing: :func:`pair`.
+
+        """
         return cls(PhilipsTVAPI(PhilipsTV(host=host, auth=auth)))
 
     def pair(self, pin_callback: PinCallback, id: Optional[str] = None) -> Credentials:
+        """Performs pairing with the TV.
+
+        After successful pairing this remote instance will be authenticated, even if you didn't
+        provide credentials when creating it.
+
+        Args:
+            pin_callback: A function taking no arguments and returning the PIN displayed
+                on TV as a string.
+            id: Device ID to use for pairing. This will be later used as a first value in
+                credentials tuple. If not given, a random, 16 characters, alphanumeric string will
+                be used.
+
+        Returns:
+            A tuple of acquired authentication credentials.
+
+        """
         id = id or create_device_id()
         uname_info = platform.uname()
         device_info = DeviceInfo(
@@ -51,22 +94,64 @@ class PhilipsTVRemote:
         return pairer.pair(pin_callback)
 
     def get_power(self) -> bool:
+        """Returns current power state.
+
+        Returns:
+            A power state. `True` means on, `False` means standby.
+
+        """
         return True if self._api.get_powerstate().powerstate == PowerStateValue.ON else False
 
     def set_power(self, power: bool) -> None:
+        """Sets current power state.
+
+        Args:
+            power: Power state to set. `True` means on, `False` means standby.
+
+        """
         value = PowerStateValue.ON if power is True else PowerStateValue.STANDBY
         self._api.set_powerstate(PowerState(powerstate=value))
 
     def get_volume(self) -> int:
+        """Returns current volume."""
         return self._api.get_volume().current
 
     def set_volume(self, volume: int) -> None:
+        """Sets current volume.
+
+        Args:
+            volume: Volume value to set.
+
+        """
         self._api.set_volume(Volume(current=volume))
 
     def get_current_channel(self) -> str:
+        """Returns current TV channel.
+
+        If the TV currently displays something different than television (any app), this will return
+        the last watched channel.
+
+        Returns:
+            Current TV channel name.
+
+        """
         return self._api.get_current_channel().channel.name
 
     def set_channel(self, channel: Union[int, str]) -> None:
+        """Changes to the given TV channel.
+
+        Use :func:`get_all_channels` to find valid values.
+
+        If the TV currently displays something different than television (any app), it will go to
+        the television.
+
+        Args:
+            channel: Number or name of the channel to change to.
+
+        Raises:
+            PhilipsTVRemoteError: If invalid channel number or name is given.
+
+        """
         if not self._channels_cache:
             self._channels_cache = self._api.get_all_channels().channel
 
@@ -82,27 +167,74 @@ class PhilipsTVRemote:
         self._api.set_channel(SetChannel(channel=ChannelID(ccid=found_channel.ccid)))
 
     def get_all_channels(self) -> Dict[int, str]:
+        """Returns all available channels and their numbers.
+
+        Returns:
+            A mapping of channel number to channel name.
+
+        """
         self._channels_cache = self._api.get_all_channels().channel
         return {int(channel.preset): channel.name for channel in self._channels_cache}
 
     def input_key(self, key: InputKeyValue) -> None:
+        """Emulates pressing a key on the TV remote.
+
+        Args:
+            key: A key value to send to the TV.
+
+        """
         self._api.input_key(InputKey(key=key))
 
     def get_ambilight_power(self) -> bool:
+        """Returns current ambilight power state.
+
+        Returns:
+            Ambilight power state. `True` means on, `False` means off.
+
+        """
         return True if self._api.get_ambilight_power().power == AmbilightPowerValue.ON else False
 
     def set_ambilight_power(self, power: bool) -> None:
+        """Sets ambilight power state.
+
+        Args:
+            power: Ambilight power state to set. `True` means on, `False` means off.
+
+        """
         value = AmbilightPowerValue.ON if power is True else AmbilightPowerValue.OFF
         self._api.set_ambilight_power(AmbilightPower(power=value))
 
     def set_ambilight_color(self, color: AmbilightColor) -> None:
+        """Sets ambilight color.
+
+        Args:
+            color: A color to set.
+
+        """
         self._api.set_ambilight_cached(color)
 
     def get_applications(self) -> List[str]:
+        """Returns a list of available applications.
+
+        Returns:
+            List of application names.
+
+        """
         self._applications_cache = self._api.get_applications().applications
         return [app.label for app in self._applications_cache]
 
     def launch_application(self, application: str) -> None:
+        """Launches an application.
+
+        Use :func:`get_applications` to find valid values.
+
+        Args:
+            application: An application name.
+
+        Raises:
+            PhilipsTVRemoteError: If invalid application name is given.
+
+        """
         if not self._applications_cache:
             self._applications_cache = self._api.get_applications().applications
 
