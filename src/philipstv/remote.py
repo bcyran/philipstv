@@ -52,7 +52,7 @@ class PhilipsTVRemote:
 
     @classmethod
     def new(cls, host: str, auth: Optional[Credentials] = None) -> "PhilipsTVRemote":
-        """Creates a new remote for given host without the need to inject:class:`PhilipsTVAPI`
+        """Create a new remote for given host without the need to inject:class:`PhilipsTVAPI`
         instance.
 
         Args:
@@ -64,7 +64,7 @@ class PhilipsTVRemote:
         return cls(PhilipsTVAPI(PhilipsTV(host=host, auth=auth)))
 
     def pair(self, pin_callback: PinCallback, id: Optional[str] = None) -> Credentials:
-        """Performs pairing with the TV.
+        """Perform pairing with the TV.
 
         After successful pairing this remote instance will be authenticated, even if you didn't
         provide credentials when creating it.
@@ -94,7 +94,7 @@ class PhilipsTVRemote:
         return pairer.pair(pin_callback)
 
     def get_power(self) -> bool:
-        """Returns current power state.
+        """Return the current power state.
 
         Returns:
             A power state. `True` means on, `False` means standby.
@@ -103,7 +103,7 @@ class PhilipsTVRemote:
         return True if self._api.get_powerstate().powerstate == PowerStateValue.ON else False
 
     def set_power(self, power: bool) -> None:
-        """Sets current power state.
+        """Set current power state.
 
         Args:
             power: Power state to set. `True` means on, `False` means standby.
@@ -113,11 +113,11 @@ class PhilipsTVRemote:
         self._api.set_powerstate(PowerState(powerstate=value))
 
     def get_volume(self) -> int:
-        """Returns current volume."""
+        """Return current volume."""
         return self._api.get_volume().current
 
     def set_volume(self, volume: int) -> None:
-        """Sets current volume.
+        """Set current volume.
 
         Args:
             volume: Volume value to set.
@@ -126,7 +126,7 @@ class PhilipsTVRemote:
         self._api.set_volume(Volume(current=volume))
 
     def get_current_channel(self) -> str:
-        """Returns current TV channel.
+        """Return current TV channel.
 
         If the TV currently displays something different than television (any app), this will return
         the last watched channel.
@@ -138,7 +138,7 @@ class PhilipsTVRemote:
         return self._api.get_current_channel().channel.name
 
     def set_channel(self, channel: Union[int, str]) -> None:
-        """Changes to the given TV channel.
+        """Change to the given TV channel.
 
         Use :func:`get_all_channels` to find valid values.
 
@@ -167,7 +167,7 @@ class PhilipsTVRemote:
         self._api.set_channel(SetChannel(channel=ChannelID(ccid=found_channel.ccid)))
 
     def get_all_channels(self) -> Dict[int, str]:
-        """Returns all available channels and their numbers.
+        """Return all available channels and their numbers.
 
         Returns:
             A mapping of channel number to channel name.
@@ -177,7 +177,7 @@ class PhilipsTVRemote:
         return {int(channel.preset): channel.name for channel in self._channels_cache}
 
     def input_key(self, key: InputKeyValue) -> None:
-        """Emulates pressing a key on the TV remote.
+        """Emulate pressing a key on the TV remote.
 
         Args:
             key: A key value to send to the TV.
@@ -186,7 +186,7 @@ class PhilipsTVRemote:
         self._api.input_key(InputKey(key=key))
 
     def get_ambilight_power(self) -> bool:
-        """Returns current ambilight power state.
+        """Return current ambilight power state.
 
         Returns:
             Ambilight power state. `True` means on, `False` means off.
@@ -195,7 +195,7 @@ class PhilipsTVRemote:
         return True if self._api.get_ambilight_power().power == AmbilightPowerValue.ON else False
 
     def set_ambilight_power(self, power: bool) -> None:
-        """Sets ambilight power state.
+        """Set ambilight power state.
 
         Args:
             power: Ambilight power state to set. `True` means on, `False` means off.
@@ -205,7 +205,7 @@ class PhilipsTVRemote:
         self._api.set_ambilight_power(AmbilightPower(power=value))
 
     def set_ambilight_color(self, color: AmbilightColor) -> None:
-        """Sets ambilight color.
+        """Set ambilight color.
 
         Args:
             color: A color to set.
@@ -214,7 +214,7 @@ class PhilipsTVRemote:
         self._api.set_ambilight_cached(color)
 
     def get_applications(self) -> List[str]:
-        """Returns a list of available applications.
+        """Return a list of available applications.
 
         Returns:
             List of application names.
@@ -224,7 +224,7 @@ class PhilipsTVRemote:
         return [app.label for app in self._applications_cache]
 
     def launch_application(self, application: str) -> None:
-        """Launches an application.
+        """Launch an application.
 
         Use :func:`get_applications` to find valid values.
 
