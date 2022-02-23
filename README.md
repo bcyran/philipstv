@@ -1,6 +1,7 @@
 # philipstv
 
 [![CI](https://github.com/bcyran/philipstv/workflows/CI/badge.svg?event=push)](https://github.com/bcyran/philipstv/actions?query=event%3Apush+branch%3Amaster+workflow%3ACI)
+[![codecov](https://codecov.io/gh/bcyran/philipstv/branch/master/graph/badge.svg?token=ROJONX34RB)](https://codecov.io/gh/bcyran/philipstv)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![pypi](https://img.shields.io/pypi/v/philipstv)](https://pypi.org/project/philipstv/)
 [![versions](https://img.shields.io/pypi/pyversions/philipstv)](https://pypi.org/project/philipstv/)
