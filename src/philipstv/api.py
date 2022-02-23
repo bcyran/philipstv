@@ -1,6 +1,5 @@
 from typing import Any, Optional, Type, TypeVar
 
-from ._interfaces import PhilipsTVInterface
 from .model import (
     AllChannels,
     AmbilightColors,
@@ -22,13 +21,14 @@ from .model import (
     SetChannel,
     Volume,
 )
+from .tv import PhilipsTV
 from .types import Credentials
 
 _T = TypeVar("_T", bound=APIModel)
 
 
 class PhilipsTVAPI:
-    def __init__(self, tv: PhilipsTVInterface) -> None:
+    def __init__(self, tv: PhilipsTV) -> None:
         self._tv = tv
         self.api_version = 6
 

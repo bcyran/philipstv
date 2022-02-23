@@ -8,7 +8,6 @@ from requests import HTTPError, Session
 from requests.auth import HTTPDigestAuth
 from urllib3.exceptions import InsecureRequestWarning
 
-from ._interfaces import PhilipsTVInterface
 from .exceptions import PhilipsTVError
 from .types import Credentials
 
@@ -29,7 +28,7 @@ def _wrap_http_exceptions() -> Iterator[None]:
         raise PhilipsTVError(status_code) from exc
 
 
-class PhilipsTV(PhilipsTVInterface):
+class PhilipsTV:
     def __init__(self, host: str, port: int = 1926, auth: Optional[Credentials] = None) -> None:
         self.host = host
         self.port = port

@@ -2,8 +2,8 @@ import logging
 from base64 import b64decode
 from typing import Callable
 
-from ._interfaces import PhilipsTVPairingAPI
 from ._utils import create_signature
+from .api import PhilipsTVAPI
 from .exceptions import PhilipsTVPairingError
 from .model import DeviceInfo, PairingAuthInfo, PairingGrantPayload, PairingRequestPayload
 from .types import Credentials
@@ -19,8 +19,8 @@ PinCallback = Callable[[], str]
 
 
 class PhilipsTVPairer:
-    def __init__(self, api: PhilipsTVPairingAPI, device_info: DeviceInfo) -> None:
-        self._api: PhilipsTVPairingAPI = api
+    def __init__(self, api: PhilipsTVAPI, device_info: DeviceInfo) -> None:
+        self._api: PhilipsTVAPI = api
         self.device_info = device_info
 
     def pair(self, pin_callback: PinCallback) -> Credentials:

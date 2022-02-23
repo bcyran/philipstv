@@ -1,11 +1,11 @@
 from typing import Any, Dict, Optional, Set
 
-from philipstv._interfaces import PhilipsTVInterface
 from philipstv.exceptions import PhilipsTVError
+from philipstv.tv import PhilipsTV
 from philipstv.types import Credentials
 
 
-class FakePhilipsTV(PhilipsTVInterface):
+class FakePhilipsTV(PhilipsTV):
     def __init__(
         self,
         post_responses: Optional[Dict[str, Any]] = None,
