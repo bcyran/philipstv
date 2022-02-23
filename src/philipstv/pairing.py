@@ -19,11 +19,37 @@ PinCallback = Callable[[], str]
 
 
 class PhilipsTVPairer:
+    """Encapsulates the pairing process and allows to perform it in a single call."""
+
     def __init__(self, api: PhilipsTVAPI, device_info: DeviceInfo) -> None:
+        """
+        Args:
+            api: :class:`PhilipsTVAPI` instance with which pairing will be performed.
+            device_info: Informations about the device which requests the pairing. This doesn't
+                really seem to have any effect, besides the fact that `id` given here serves as a
+                "username" and later will be the first value in the credentials tuple.
+        """
         self._api: PhilipsTVAPI = api
         self.device_info = device_info
 
     def pair(self, pin_callback: PinCallback) -> Credentials:
+        """Perfom the pairing.
+
+        Hint:
+            If the pairing is successful, this leaves the underlying :class:`PhilipsTVAPI` instance
+            in authenticated state, so you don't have to call :func:`set_auth` with the received
+            credentials.
+
+        Args:
+            pin_callback: Callback function which should return the PIN displayed on the TV
+                screen as a string. It's impossible to know the PIN before requesting pairing
+                so this function should be used to prompt the user for the PIN.
+
+        Returns:
+            Authentication credentials tuple. This value can be used to authenticate with the TV
+            at any point in future.
+
+        """
         self._api.set_auth(None)
         pair_response = self._api.pair_request(self._get_request_payload())
 
