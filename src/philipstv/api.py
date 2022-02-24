@@ -7,7 +7,7 @@ from .model import (
     AmbilightMode,
     AmbilightPower,
     AmbilightTopology,
-    APIModel,
+    APIObject,
     Applications,
     ApplicationShort,
     CurrentChannel,
@@ -24,7 +24,7 @@ from .model import (
 from .tv import PhilipsTV
 from .types import Credentials
 
-_T = TypeVar("_T", bound=APIModel)
+_T = TypeVar("_T", bound=APIObject)
 
 
 class PhilipsTVAPI:
@@ -99,14 +99,14 @@ class PhilipsTVAPI:
         self._api_post("activities/launch", application)
 
     def _api_post_model(
-        self, path: str, resp_model: Type[_T], payload: Optional[APIModel] = None
+        self, path: str, resp_model: Type[_T], payload: Optional[APIObject] = None
     ) -> _T:
         return resp_model.parse(self._api_post(path, payload))
 
     def _api_get_model(self, path: str, response_model: Type[_T]) -> _T:
         return response_model.parse(self._api_get(path))
 
-    def _api_post(self, path: str, payload: Optional[APIModel] = None) -> Any:
+    def _api_post(self, path: str, payload: Optional[APIObject] = None) -> Any:
         return self._tv.post(self._api_path(path), payload.dump() if payload else None)
 
     def _api_get(self, path: str) -> Any:

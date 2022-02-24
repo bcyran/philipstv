@@ -1,29 +1,12 @@
-from abc import abstractmethod
 from enum import Enum
-from typing import Any, Protocol, Type, TypeVar
+from typing import Any, Type, TypeVar
 
 from pydantic import BaseModel
 
-_SelfModel = TypeVar("_SelfModel", bound="APIModel")
 _SelfAPIObject = TypeVar("_SelfAPIObject", bound="APIObject")
 
 
-class APIModel(Protocol):
-    @abstractmethod
-    def dump(self) -> Any:
-        raise NotImplementedError
-
-    @classmethod
-    @abstractmethod
-    def parse(cls: Type[_SelfModel], raw: Any) -> _SelfModel:
-        raise NotImplementedError
-
-
-class APIObjectMeta(type(BaseModel), type(APIModel)):  # type: ignore [misc]
-    pass
-
-
-class APIObject(APIModel, BaseModel, metaclass=APIObjectMeta):
+class APIObject(BaseModel):
     def dump(self) -> Any:
         data = super().dict(by_alias=True)
         return data["__root__"] if self.__custom_root_type__ else data

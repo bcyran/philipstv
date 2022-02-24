@@ -1,4 +1,4 @@
-from ._base import APIModel
+from ._base import APIObject
 from .ambilight import (
     AmbilightColor,
     AmbilightColors,
@@ -40,7 +40,7 @@ from .pairing import (
 )
 
 __all__ = [
-    "APIModel",
+    "APIObject",
     "AllChannels",
     "AmbilightColor",
     "AmbilightColorSettings",
