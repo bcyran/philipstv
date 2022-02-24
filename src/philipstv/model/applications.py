@@ -2,7 +2,7 @@ from typing import List
 
 from pydantic.fields import Field
 
-from ._base import APIObject
+from .base import APIObject
 
 
 class ApplicationComponent(APIObject):

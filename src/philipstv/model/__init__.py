@@ -1,4 +1,3 @@
-from ._base import APIObject
 from .ambilight import (
     AmbilightColor,
     AmbilightColors,
@@ -18,6 +17,7 @@ from .applications import (
     ApplicationShort,
 )
 from .audio import CurrentVolume, Volume
+from .base import APIObject, StrEnum
 from .channels import (
     AllChannels,
     Channel,
@@ -74,5 +74,6 @@ __all__ = [
     "PowerState",
     "PowerStateValue",
     "SetChannel",
+    "StrEnum",
     "Volume",
 ]

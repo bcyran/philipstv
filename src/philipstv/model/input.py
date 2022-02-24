@@ -1,4 +1,4 @@
-from ._base import APIObject, StrEnum
+from .base import APIObject, StrEnum
 
 
 class InputKeyValue(StrEnum):

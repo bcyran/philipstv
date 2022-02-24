@@ -1,4 +1,4 @@
-from ._base import APIObject
+from .base import APIObject
 
 
 class Volume(APIObject):

@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from ._base import APIObject
+from .base import APIObject
 
 
 class DeviceInfo(APIObject):
