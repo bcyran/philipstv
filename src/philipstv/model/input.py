@@ -2,6 +2,8 @@ from .base import APIObject, StrEnum
 
 
 class InputKeyValue(StrEnum):
+    """Values of remote key names."""
+
     STANDBY = "Standby"
     BACK = "Back"
     FIND = "Find"
@@ -52,4 +54,7 @@ class InputKeyValue(StrEnum):
 
 
 class InputKey(APIObject):
+    """Model of remote key input request."""
+
     key: InputKeyValue
+    """Value of the key."""
