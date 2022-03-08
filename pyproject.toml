@@ -6,6 +6,7 @@ license = "MIT"
 authors = ["Bazyli Cyran <bazyli@cyran.dev>"]
 readme = "README.md"
 repository = "https://github.com/bcyran/philipstv"
+documentation = "https://philipstv.readthedocs.io"
 keywords = ["cli", "tv", "api-wrapper", "philips", "ambilight"]
 classifiers = [
     "Development Status :: 4 - Beta",
