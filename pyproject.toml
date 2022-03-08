@@ -29,9 +29,13 @@ requests = "^2.27.1"
 pydantic = "^1.9.0"
 click = { version = "^8.0.3", optional = true }
 appdirs = { version = "^1.4.4", optional = true }
+Sphinx = { version = "^4.4.0", optional = true }
+furo = { version = "^2022.2.14", optional = true }
+enum-tools = {extras = ["sphinx"], version = "^0.9.0", optional = true }
 
 [tool.poetry.extras]
 cli = ["click", "appdirs"]
+docs = ["sphinx", "furo", "enum-tools"]
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.0.0"
@@ -45,10 +49,7 @@ tox-poetry = "^0.4.1"
 requests-mock = "^1.9.3"
 pytest-cov = "^3.0.0"
 types-appdirs = "^1.4.2"
-Sphinx = "^4.4.0"
-furo = "^2022.2.14"
 sphinx-autobuild = "^2021.3.14"
-enum-tools = {extras = ["sphinx"], version = "^0.9.0"}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
