@@ -12,6 +12,7 @@
 #
 import os
 import sys
+from importlib import metadata
 
 sys.path.insert(0, os.path.abspath(".."))
 
@@ -23,7 +24,7 @@ copyright = "2022, Bazyli Cyran"
 author = "Bazyli Cyran"
 
 # The full version, including alpha/beta/rc tags
-release = "0.1.0"
+release = metadata.version("philipstv")
 
 
 # -- General configuration ---------------------------------------------------
