@@ -61,7 +61,7 @@ If you only need library for use in Python code:
 .. -end-intro-
 
 Documentation
-------------
+-------------
 See full documentation: `Read the Docs: philipstv <https://philipstv.readthedocs.io>`_.
 
 Resources
