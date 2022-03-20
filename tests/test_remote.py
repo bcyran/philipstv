@@ -99,6 +99,16 @@ def api_mock() -> Mock:
     return create_autospec(PhilipsTVAPI, spec_set=True, instance=True)  # type: ignore
 
 
+def test_auth(api_mock: PhilipsTVAPI) -> None:
+    expected_credentials = ("<key>", "<secret>")
+    remote = PhilipsTVRemote(api_mock)
+
+    remote.auth = expected_credentials
+
+    assert remote.auth == expected_credentials
+    assert api_mock.auth == expected_credentials
+
+
 def test_pair(api_mock: Mock, monkeypatch: MonkeyPatch) -> None:
     given_id = "<id>"
     pairer_mock = create_autospec(PhilipsTVPairer)

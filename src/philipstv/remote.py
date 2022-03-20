@@ -50,6 +50,20 @@ class PhilipsTVRemote:
         self._channels_cache: List[Channel] = []
         self._applications_cache: List[Application] = []
 
+    @property
+    def auth(self) -> Optional[Credentials]:
+        """Credentials used for authentication in the underlying :class:`PhilipsTVAPI` instance.
+
+        Hint:
+            This value can be set and changed at any moment during :class:`PhilipsTVRemote` usage.
+
+        """
+        return self._api.auth
+
+    @auth.setter
+    def auth(self, value: Optional[Credentials]) -> None:
+        self._api.auth = value
+
     @classmethod
     def new(cls, host: str, auth: Optional[Credentials] = None) -> "PhilipsTVRemote":
         """Create a new remote for given host without the need to inject:class:`PhilipsTVAPI`
