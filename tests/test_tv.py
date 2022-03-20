@@ -19,6 +19,17 @@ RESPONSES = [
 ]
 
 
+def test_tv_auth() -> None:
+    first_credentials = ("<first key>", "<first secret>")
+    second_credentials = ("<second key>", "<second secret>")
+
+    tv = PhilipsTV(HOST, PORT, first_credentials)
+    assert tv.auth == first_credentials
+
+    tv.auth = second_credentials
+    assert tv.auth == second_credentials
+
+
 @pytest.mark.parametrize("path, expected_url", PATHS)
 @pytest.mark.parametrize("expected_response", RESPONSES)
 def test_tv_post(

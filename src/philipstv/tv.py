@@ -49,12 +49,24 @@ class PhilipsTV:
         self.port = port
         self.url = f"https://{self.host}:{self.port}"
 
+        self._auth: Optional[Credentials] = None
         self._session = self._create_session()
-        self.set_auth(auth)
+        self.auth = auth
 
-    def set_auth(self, auth: Optional[Credentials]) -> None:
-        """Set authentication credentials."""
-        self._session.auth = HTTPDigestAuth(*auth) if auth else None
+    @property
+    def auth(self) -> Optional[Credentials]:
+        """Credentials used for authentication.
+
+        Hint:
+            This value can be set and changed at any moment during :class:`PhilipsTV` usage.
+
+        """
+        return self._auth
+
+    @auth.setter
+    def auth(self, value: Optional[Credentials]) -> None:
+        self._session.auth = HTTPDigestAuth(*value) if value else None
+        self._auth = value
 
     def post(self, path: str, payload: Any = None) -> Any:
         """Send `POST` request.

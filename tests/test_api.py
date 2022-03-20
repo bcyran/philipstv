@@ -1,8 +1,6 @@
-from unittest.mock import create_autospec
-
 import pytest
 
-from philipstv import PhilipsTV, PhilipsTVAPI
+from philipstv import PhilipsTVAPI
 from philipstv.model import (
     AllChannels,
     AmbilightColor,
@@ -48,12 +46,15 @@ DEVICE_INFO = DeviceInfo(
 )
 
 
-def test_set_auth() -> None:
-    tv_mock = create_autospec(PhilipsTV)
+def test_auth() -> None:
+    expected_auth = ("<id>", "<key>")
+    fake_tv = FakePhilipsTV()
+    api = PhilipsTVAPI(fake_tv)
 
-    PhilipsTVAPI(tv_mock).set_auth(("<id>", "<key>"))
+    api.auth = expected_auth
 
-    tv_mock.set_auth.assert_called_once_with(("<id>", "<key>"))
+    assert api.auth == expected_auth
+    assert fake_tv.auth == expected_auth
 
 
 def test_pair_request() -> None:

@@ -37,8 +37,8 @@ class PhilipsTVPairer:
 
         Hint:
             If the pairing is successful, this leaves the underlying :class:`PhilipsTVAPI` instance
-            in authenticated state, so you don't have to call :func:`set_auth` with the received
-            credentials.
+            in authenticated state, so you don't have to set :attr:`PhilipsTVAPI.auth` with the
+            received credentials.
 
         Args:
             pin_callback: Callback function which should return the PIN displayed on the TV
@@ -50,7 +50,7 @@ class PhilipsTVPairer:
             at any point in future.
 
         """
-        self._api.set_auth(None)
+        self._api.auth = None
         pair_response = self._api.pair_request(self._get_request_payload())
 
         is_success = pair_response.error_id == "SUCCESS"
@@ -59,7 +59,7 @@ class PhilipsTVPairer:
 
         pair_pin = pin_callback()
 
-        self._api.set_auth((self.device_info.id, pair_response.auth_key))
+        self._api.auth = (self.device_info.id, pair_response.auth_key)
         grant_response = self._api.pair_grant(
             self._get_grant_payload(pair_pin, pair_response.timestamp)
         )

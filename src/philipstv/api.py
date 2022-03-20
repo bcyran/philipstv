@@ -45,14 +45,19 @@ class PhilipsTVAPI:
         self._tv = tv
         self.api_version = 6
 
-    def set_auth(self, auth: Optional[Credentials]) -> None:
-        """Authenticate with the underlying :class:`PhilipsTV` instance.
+    @property
+    def auth(self) -> Optional[Credentials]:
+        """Credentials used for authentication in the underlying :class:`PhilipsTV` instance.
 
-        Args:
-            auth: Authentication credentials tuple.
+        Hint:
+            This value can be set and changed at any moment during :class:`PhilipsTVAPI` usage.
 
         """
-        self._tv.set_auth(auth)
+        return self._tv.auth
+
+    @auth.setter
+    def auth(self, auth: Optional[Credentials]) -> None:
+        self._tv.auth = auth
 
     def pair_request(self, payload: PairingRequestPayload) -> PairingRequestResponse:
         """Send request initiating the pairing process.

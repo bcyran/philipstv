@@ -11,15 +11,20 @@ class FakePhilipsTV(PhilipsTV):
         post_responses: Optional[Dict[str, Any]] = None,
         get_responses: Optional[Dict[str, Any]] = None,
     ) -> None:
-        self.auth: Optional[Credentials] = None
+        self._auth: Optional[Credentials] = None
         self.post_requests: Dict[str, Any] = {}
         self.get_requests: Set[str] = set()
 
         self.post_responses = post_responses or {}
         self.get_responses = get_responses or {}
 
-    def set_auth(self, auth: Optional[Credentials]) -> None:
-        self.auth = auth
+    @property
+    def auth(self) -> Optional[Credentials]:
+        return self._auth
+
+    @auth.setter
+    def auth(self, value: Optional[Credentials]) -> None:
+        self._auth = value
 
     def post(self, path: str, payload: Any = None) -> Any:
         self.post_requests[path] = payload
