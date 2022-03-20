@@ -46,6 +46,16 @@ class PhilipsTVAPI:
         self.api_version = 6
 
     @property
+    def host(self) -> str:
+        """IP address of the underlying :class:`PhilipsTV` instance.
+
+        Warning:
+            This value is read-only.
+
+        """
+        return self._tv.host
+
+    @property
     def auth(self) -> Optional[Credentials]:
         """Credentials used for authentication in the underlying :class:`PhilipsTV` instance.
 

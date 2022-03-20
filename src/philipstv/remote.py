@@ -51,6 +51,16 @@ class PhilipsTVRemote:
         self._applications_cache: List[Application] = []
 
     @property
+    def host(self) -> str:
+        """IP address of the underlying :class:`PhilipsTVAPI` instance.
+
+        Warning:
+            This value is read-only.
+
+        """
+        return self._api.host
+
+    @property
     def auth(self) -> Optional[Credentials]:
         """Credentials used for authentication in the underlying :class:`PhilipsTVAPI` instance.
 

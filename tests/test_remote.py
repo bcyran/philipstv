@@ -99,6 +99,15 @@ def api_mock() -> Mock:
     return create_autospec(PhilipsTVAPI, spec_set=True, instance=True)  # type: ignore
 
 
+def test_host(api_mock: Mock) -> None:
+    expected_host = "192.168.0.66"
+    api_mock.host = expected_host
+
+    result = PhilipsTVRemote(api_mock).host
+
+    assert result == expected_host
+
+
 def test_auth(api_mock: PhilipsTVAPI) -> None:
     expected_credentials = ("<key>", "<secret>")
     remote = PhilipsTVRemote(api_mock)

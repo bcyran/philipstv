@@ -46,6 +46,16 @@ DEVICE_INFO = DeviceInfo(
 )
 
 
+def test_host() -> None:
+    expected_host = "192.168.0.66"
+    fake_tv = FakePhilipsTV()
+    fake_tv.host = expected_host
+
+    result = PhilipsTVAPI(fake_tv).host
+
+    assert result == expected_host
+
+
 def test_auth() -> None:
     expected_auth = ("<id>", "<key>")
     fake_tv = FakePhilipsTV()

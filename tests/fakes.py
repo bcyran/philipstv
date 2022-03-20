@@ -11,6 +11,7 @@ class FakePhilipsTV(PhilipsTV):
         post_responses: Optional[Dict[str, Any]] = None,
         get_responses: Optional[Dict[str, Any]] = None,
     ) -> None:
+        self.host = ""
         self._auth: Optional[Credentials] = None
         self.post_requests: Dict[str, Any] = {}
         self.get_requests: Set[str] = set()
