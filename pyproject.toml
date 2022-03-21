@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "philipstv"
-version = "0.2.0"
+version = "0.0.0"  # this will be set during build by poetry-dynamic-versioning
 description = "CLI and library to control Philips Android-powered TVs."
 license = "MIT"
 authors = ["Bazyli Cyran <bazyli@cyran.dev>"]
@@ -53,8 +53,21 @@ types-appdirs = "^1.4.2"
 sphinx-autobuild = "^2021.3.14"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry-dynamic-versioning]
+enable = true
+vcs = "git"
+style = "semver"
+pattern = """(?x)
+^(?P<base>\\d+(\\.\\d+)*)
+(-?((?P<stage>[a-zA-Z]+)\\.?(?P<revision>\\d+)?))?
+(\\+(?P<tagged_metadata>.+))?$
+"""
+
+[tool.poetry-dynamic-versioning.substitution]
+files = ["src/philipstv/__init__.py"]
 
 [tool.mypy]
 strict = true
