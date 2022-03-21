@@ -1,4 +1,11 @@
-from typing import Any, Optional, Type, TypeVar
+from contextlib import contextmanager
+from typing import Any, Iterator, Optional, Type, TypeVar
+
+from philipstv.exceptions import (
+    PhilipsTVAPIMalformedResponseError,
+    PhilipsTVAPIUnauthorizedError,
+    PhilipsTVError,
+)
 
 from .model import (
     AllChannels,
@@ -19,12 +26,31 @@ from .model import (
     PairingResponse,
     PowerState,
     SetChannel,
+    ValidationError,
     Volume,
 )
 from .tv import PhilipsTV
 from .types import Credentials
 
 _T = TypeVar("_T", bound=APIObject)
+
+
+@contextmanager
+def _wrap_unauthorized_exceptions(path: str) -> Iterator[None]:
+    try:
+        yield
+    except PhilipsTVError as exc:
+        if exc.status_code == 401:
+            raise PhilipsTVAPIUnauthorizedError(exc.method, path) from exc
+        raise
+
+
+@contextmanager
+def _wrap_validation_exceptions(method: str, path: str, response: Any) -> Iterator[None]:
+    try:
+        yield
+    except ValidationError as exc:
+        raise PhilipsTVAPIMalformedResponseError(method, path, response) from exc
 
 
 class PhilipsTVAPI:
@@ -220,16 +246,22 @@ class PhilipsTVAPI:
     def _api_post_model(
         self, path: str, resp_model: Type[_T], payload: Optional[APIObject] = None
     ) -> _T:
-        return resp_model.parse(self._api_post(path, payload))
+        raw_response = self._api_post(path, payload)
+        with _wrap_validation_exceptions("POST", path, raw_response):
+            return resp_model.parse(raw_response)
 
     def _api_get_model(self, path: str, response_model: Type[_T]) -> _T:
-        return response_model.parse(self._api_get(path))
+        raw_response = self._api_get(path)
+        with _wrap_validation_exceptions("GET", path, raw_response):
+            return response_model.parse(raw_response)
 
     def _api_post(self, path: str, payload: Optional[APIObject] = None) -> Any:
-        return self._tv.post(self._api_path(path), payload.dump() if payload else None)
+        with _wrap_unauthorized_exceptions(path):
+            return self._tv.post(self._api_path(path), payload.dump() if payload else None)
 
     def _api_get(self, path: str) -> Any:
-        return self._tv.get(self._api_path(path))
+        with _wrap_unauthorized_exceptions(path):
+            return self._tv.get(self._api_path(path))
 
     def _api_path(self, path: str) -> str:
         return f"{self.api_version}/{path}"

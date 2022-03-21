@@ -1,6 +1,13 @@
+from typing import Any, Type
+
 import pytest
 
-from philipstv import PhilipsTVAPI
+from philipstv import (
+    PhilipsTVAPI,
+    PhilipsTVAPIMalformedResponseError,
+    PhilipsTVAPIUnauthorizedError,
+    PhilipsTVError,
+)
 from philipstv.model import (
     AllChannels,
     AmbilightColor,
@@ -404,3 +411,30 @@ def test_launch_application() -> None:
             },
         },
     }
+
+
+@pytest.mark.parametrize(
+    "response, expected_exception",
+    [
+        pytest.param(
+            PhilipsTVError("GET", "6/powerstate", 401),
+            PhilipsTVAPIUnauthorizedError,
+            id="unauthorized request error",
+        ),
+        pytest.param(
+            {"foo": "bar"},
+            PhilipsTVAPIMalformedResponseError,
+            id="malformed response error",
+        ),
+        pytest.param(
+            PhilipsTVError("GET", "6/powerstate", 404),
+            PhilipsTVError,
+            id="unhandled error",
+        ),
+    ],
+)
+def test_api_error(response: Any, expected_exception: Type[Exception]) -> None:
+    fake_tv = FakePhilipsTV(get_responses={"6/powerstate": response})
+
+    with pytest.raises(expected_exception):
+        PhilipsTVAPI(fake_tv).get_powerstate()

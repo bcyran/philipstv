@@ -30,13 +30,19 @@ class FakePhilipsTV(PhilipsTV):
     def post(self, path: str, payload: Any = None) -> Any:
         self.post_requests[path] = payload
         try:
-            return self.post_responses[path]
+            return self._raise_or_return(self.post_responses[path])
         except KeyError:
             raise PhilipsTVError("POST", path, 404)
 
     def get(self, path: str) -> Any:
         self.get_requests.add(path)
         try:
-            return self.get_responses[path]
+            return self._raise_or_return(self.get_responses[path])
         except KeyError:
             raise PhilipsTVError("GET", path, 404)
+
+    @staticmethod
+    def _raise_or_return(value: Any) -> Any:
+        if isinstance(value, Exception):
+            raise value
+        return value

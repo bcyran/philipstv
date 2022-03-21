@@ -1,5 +1,13 @@
 from .api import PhilipsTVAPI
-from .exceptions import PhilipsError, PhilipsTVError, PhilipsTVPairingError, PhilipsTVRemoteError
+from .exceptions import (
+    PhilipsError,
+    PhilipsTVAPIError,
+    PhilipsTVAPIMalformedResponseError,
+    PhilipsTVAPIUnauthorizedError,
+    PhilipsTVError,
+    PhilipsTVPairingError,
+    PhilipsTVRemoteError,
+)
 from .model import DeviceInfo
 from .pairing import PhilipsTVPairer
 from .remote import AmbilightColor, InputKeyValue, PhilipsTVRemote
@@ -14,6 +22,9 @@ __all__ = [
     "PhilipsError",
     "PhilipsTV",
     "PhilipsTVAPI",
+    "PhilipsTVAPIError",
+    "PhilipsTVAPIMalformedResponseError",
+    "PhilipsTVAPIUnauthorizedError",
     "PhilipsTVError",
     "PhilipsTVPairer",
     "PhilipsTVPairingError",

@@ -44,6 +44,12 @@ Exceptions
 
 .. autoexception:: PhilipsTVPairingError
 
+.. autoexception:: PhilipsTVAPIError
+
+.. autoexception:: PhilipsTVAPIUnauthorizedError
+
+.. autoexception:: PhilipsTVAPIMalformedResponseError
+
 .. autoexception:: PhilipsTVRemoteError
 
 API models

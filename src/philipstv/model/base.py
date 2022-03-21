@@ -2,6 +2,7 @@ from enum import Enum
 from typing import Any, Type, TypeVar
 
 from pydantic import BaseModel
+from pydantic import ValidationError as ValidationError  # noqa: F401 | intentional reexport
 
 _SelfAPIObject = TypeVar("_SelfAPIObject", bound="APIObject")
 
@@ -39,6 +40,9 @@ class APIObject(BaseModel):
 
         Returns:
             An instance of a subclass this is called on.
+
+        Raises:
+            ValidationError: if given JSON data cannot be parsed into this model.
 
         """
         return cls.parse_obj(raw)

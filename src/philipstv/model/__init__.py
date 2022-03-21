@@ -17,7 +17,7 @@ from .applications import (
     ApplicationShort,
 )
 from .audio import CurrentVolume, Volume
-from .base import APIObject, StrEnum
+from .base import APIObject, StrEnum, ValidationError
 from .channels import (
     AllChannels,
     Channel,
@@ -75,5 +75,6 @@ __all__ = [
     "PowerStateValue",
     "SetChannel",
     "StrEnum",
+    "ValidationError",
     "Volume",
 ]

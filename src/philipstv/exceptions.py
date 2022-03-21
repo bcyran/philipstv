@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Any, Optional
 
 from .model import PairingResponse
 
@@ -18,8 +18,8 @@ class PhilipsTVError(PhilipsError):
     """Raised if HTTP error occured during communication with the TV.
 
     Attributes:
-        method: HTTP method of a request.
-        path: path of a request.
+        method: HTTP method of the request.
+        url: URL of the request.
         status_code: HTTP status_code that caused the exception.
 
     """
@@ -44,6 +44,42 @@ class PhilipsTVPairingError(PhilipsError):
 
     def __init__(self, response: PairingResponse) -> None:
         super().__init__(f"Pairing error: {response.error_id} {response.error_text}")
+        self.response = response
+
+
+class PhilipsTVAPIError(PhilipsError):
+    """Raised when something goes wrong with API communication."""
+
+
+class PhilipsTVAPIUnauthorizedError(PhilipsTVAPIError):
+    """Raised when trying to use the API without, or with invalid credentials.
+
+    Attributes:
+        method: HTTP method of the request.
+        path: Path of the request.
+
+    """
+
+    def __init__(self, method: str, path: str) -> None:
+        super().__init__(f"Unauthorized API access: {method} {path}")
+        self.method = method
+        self.path = path
+
+
+class PhilipsTVAPIMalformedResponseError(PhilipsTVAPIError):
+    """Raised when response received from the API is unparsable into known object.
+
+    Attributes:
+        method: HTTP method of the request.
+        path: Path of the request.
+        response: Raw response JSON returned by the API.
+
+    """
+
+    def __init__(self, method: str, path: str, response: Any) -> None:
+        super().__init__(f"Malformed API response: {method} {path}")
+        self.method = method
+        self.path = path
         self.response = response
 
 
