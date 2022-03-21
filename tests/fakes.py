@@ -32,11 +32,11 @@ class FakePhilipsTV(PhilipsTV):
         try:
             return self.post_responses[path]
         except KeyError:
-            raise PhilipsTVError(404)
+            raise PhilipsTVError("POST", path, 404)
 
     def get(self, path: str) -> Any:
         self.get_requests.add(path)
         try:
             return self.get_responses[path]
         except KeyError:
-            raise PhilipsTVError(404)
+            raise PhilipsTVError("GET", path, 404)

@@ -22,10 +22,8 @@ def _wrap_http_exceptions() -> Iterator[None]:
     try:
         yield
     except HTTPError as exc:
-        status_code = None
-        if exc.response is not None:
-            status_code = exc.response.status_code
-        raise PhilipsTVError(status_code) from exc
+        status_code = exc.response.status_code if exc.response is not None else None
+        raise PhilipsTVError(exc.request.method, exc.request.url, status_code) from exc
 
 
 class PhilipsTV:

@@ -63,11 +63,15 @@ def test_tv_get(
 def test_tv_error(status_code: int, requests_mock: Mocker) -> None:
     path = "random/path"
     url = f"https://{HOST}:{PORT}/{path}"
+    expected_message = f"POST request to {url} failed with status {status_code}"
     requests_mock.post(url, status_code=status_code)
 
     tv = PhilipsTV(HOST, PORT)
 
-    with pytest.raises(PhilipsTVError) as excinfo:
+    with pytest.raises(PhilipsTVError, match=expected_message) as excinfo:
         tv.post(path)
 
-    assert excinfo.value.status_code == status_code
+    exception = excinfo.value
+    assert exception.method == "POST"
+    assert exception.url == url
+    assert exception.status_code == status_code

@@ -6,18 +6,29 @@ from .model import PairingResponse
 class PhilipsError(Exception):
     """Base exception for all exceptions raised by this package."""
 
+    def __init__(self, message: str) -> None:
+        super().__init__()
+        self.message = message
+
+    def __str__(self) -> str:
+        return self.message
+
 
 class PhilipsTVError(PhilipsError):
     """Raised if HTTP error occured during communication with the TV.
 
     Attributes:
+        method: HTTP method of a request.
+        path: path of a request.
         status_code: HTTP status_code that caused the exception.
 
     """
 
-    def __init__(self, status_code: Optional[int] = None) -> None:
+    def __init__(self, method: str, url: str, status_code: Optional[int] = None) -> None:
+        super().__init__(f"{method} request to {url} failed with status {status_code}")
+        self.method = method
+        self.url = url
         self.status_code = status_code
-        super().__init__()
 
 
 class PhilipsTVPairingError(PhilipsError):
@@ -32,8 +43,8 @@ class PhilipsTVPairingError(PhilipsError):
     """
 
     def __init__(self, response: PairingResponse) -> None:
-        self.response = response
         super().__init__(f"Pairing error: {response.error_id} {response.error_text}")
+        self.response = response
 
 
 class PhilipsTVRemoteError(PhilipsError):
