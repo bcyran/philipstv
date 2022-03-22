@@ -65,6 +65,7 @@ class PhilipsTVPairer:
         )
 
         if grant_response.error_id != "SUCCESS":
+            self._api.auth = None
             raise PhilipsTVPairingError(grant_response)
 
         return (self.device_info.id, pair_response.auth_key)

@@ -47,6 +47,7 @@ def test_pair_happy_path() -> None:
     api_mock = create_autospec(PhilipsTVAPI)
     api_mock.pair_request.return_value = REQUEST_REPONSE_OK
     api_mock.pair_grant.return_value = GRANT_RESPONSE_OK
+    expected_credentials = ("<device_id>", "<key>")
 
     credentials = PhilipsTVPairer(api_mock, DEVICE_INFO).pair(lambda: "<pin>")
 
@@ -59,7 +60,8 @@ def test_pair_happy_path() -> None:
             device=DEVICE_INFO,
         )
     )
-    assert credentials == ("<device_id>", "<key>")
+    assert credentials == expected_credentials
+    assert api_mock.auth == expected_credentials
 
 
 @pytest.mark.parametrize(
@@ -79,3 +81,5 @@ def test_pair_error(
 
     with pytest.raises(PhilipsTVPairingError, match=expected_message):
         pairer.pair(lambda: "<pin>")
+
+    assert api_mock.auth is None
