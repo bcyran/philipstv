@@ -4,7 +4,7 @@ from typing import Any, Iterator, Optional
 from urllib.parse import urljoin
 
 import urllib3
-from requests import HTTPError, Session
+from requests import RequestException, Session
 from requests.auth import HTTPDigestAuth
 from urllib3.exceptions import InsecureRequestWarning
 
@@ -21,7 +21,7 @@ _LOGGER = logging.getLogger(__name__)
 def _wrap_http_exceptions() -> Iterator[None]:
     try:
         yield
-    except HTTPError as exc:
+    except RequestException as exc:
         status_code = exc.response.status_code if exc.response is not None else None
         raise PhilipsTVError(exc.request.method, exc.request.url, status_code) from exc
 

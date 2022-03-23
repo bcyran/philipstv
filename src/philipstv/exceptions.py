@@ -15,12 +15,12 @@ class PhilipsError(Exception):
 
 
 class PhilipsTVError(PhilipsError):
-    """Raised if HTTP error occured during communication with the TV.
+    """Raised if error occured during communication with the TV.
 
     Attributes:
         method: HTTP method of the request.
         url: URL of the request.
-        status_code: HTTP status_code that caused the exception.
+        status_code: HTTP status_code if response was received.
 
     """
 
