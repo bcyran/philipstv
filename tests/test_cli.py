@@ -15,6 +15,7 @@ from philipstv import (
     PhilipsTVRemoteError,
 )
 from philipstv._cli import cli
+from philipstv.exceptions import PhilipsError, PhilipsTVAPIUnauthorizedError, PhilipsTVError
 from philipstv.model import PairingResponse
 from philipstv.types import Credentials
 
@@ -222,7 +223,7 @@ def test_channel_set_error(remote: Mock) -> None:
     result = run_with_auth("channel", "set", "whatever")
 
     assert result.exit_code != 0
-    assert result.stderr == "<error message>\n"
+    assert result.stderr == "Error: <error message>\n"
 
 
 @pytest.mark.parametrize(
@@ -279,4 +280,38 @@ def test_app_launch_error(remote: Mock) -> None:
     result = run_with_auth("app", "launch", "whatever")
 
     assert result.exit_code != 0
-    assert result.stderr == "<error message>\n"
+    assert result.stderr == "Error: <error message>\n"
+
+
+@pytest.mark.parametrize(
+    "exception, expected_message",
+    [
+        pytest.param(
+            PhilipsTVRemoteError("<error>"),
+            "Error: <error>",
+            id="remote usage error",
+        ),
+        pytest.param(
+            PhilipsTVAPIUnauthorizedError("<method>", "<path>"),
+            "Error: Could not authenticate with the TV.",
+            id="authentication error",
+        ),
+        pytest.param(
+            PhilipsTVError("<method>", "<url>"),
+            "Error: Could not connect with the TV.",
+            id="connection error",
+        ),
+        pytest.param(
+            PhilipsError("<error>"),
+            "Error: Unknown error occured.",
+            id="unknown error",
+        ),
+    ],
+)
+def test_handle_exceptions(remote: Mock, exception: Exception, expected_message: str) -> None:
+    remote.get_power.side_effect = exception
+
+    result = run_with_auth("power", "get")
+
+    assert result.exit_code != 0
+    assert expected_message in result.stderr

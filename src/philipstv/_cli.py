@@ -1,17 +1,64 @@
 import logging
 from dataclasses import dataclass
-from typing import Optional, Tuple, Union
+from functools import wraps
+from typing import Any, Callable, Optional, Tuple, Union
 
 import click
 
 from philipstv import __version__
 
 from ._data import HostData, PhilipsTVData
-from .exceptions import PhilipsTVPairingError, PhilipsTVRemoteError
+from .exceptions import (
+    PhilipsError,
+    PhilipsTVAPIUnauthorizedError,
+    PhilipsTVError,
+    PhilipsTVPairingError,
+    PhilipsTVRemoteError,
+)
 from .model import AmbilightColor, InputKeyValue
 from .remote import PhilipsTVRemote
 
 _LOGGER = logging.getLogger(__name__)
+
+
+COMMON_ERROR_MESSAGE = """\
+You can try to run the application with '--debug' option to get more info."""
+
+UNAUTHORIZED_MESSAGE = f"""\
+Could not authenticate with the TV.
+Make sure you use correct credentials.
+{COMMON_ERROR_MESSAGE}"""
+
+CONNECTION_ERROR_MESSAGE = f"""\
+Could not connect with the TV.
+Make sure the IP address is correct and TV is powered on.
+{COMMON_ERROR_MESSAGE}"""
+
+UNKNOWN_ERROR_MESSAGE = f"""\
+Unknown error occured.
+{COMMON_ERROR_MESSAGE}"""
+
+
+def handle_tv_errors(func: Callable[..., None]) -> Callable[..., None]:
+    @wraps(func)
+    def wrapper(*args: Any, **kwargs: Any) -> Any:
+        try:
+            return func(*args, **kwargs)
+        except PhilipsTVRemoteError as err:
+            _LOGGER.debug("Remote error", exc_info=True)
+            raise click.ClickException(str(err))
+        except PhilipsTVAPIUnauthorizedError:
+            _LOGGER.debug("Authentication error", exc_info=True)
+            raise click.ClickException(UNAUTHORIZED_MESSAGE)
+        except PhilipsTVError:
+            _LOGGER.debug("Connection error", exc_info=True)
+            raise click.ClickException(CONNECTION_ERROR_MESSAGE)
+        except PhilipsError:
+            _LOGGER.debug("Unknown error", exc_info=True)
+            raise click.ClickException(UNKNOWN_ERROR_MESSAGE)
+
+    return wrapper
+
 
 KEY_MAP = {
     "standby": InputKeyValue.STANDBY,
@@ -89,6 +136,7 @@ CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"]}
 @click.version_option(__version__, "-v", "--version")
 @click.option("-d", "--debug", is_flag=True, default=False, help="Enable debug log.")
 @click.pass_context
+@handle_tv_errors
 def cli(
     ctx: click.Context,
     host: Optional[str],
@@ -153,6 +201,7 @@ def cli(
 @cli.command("pair")
 @pass_tv_context
 @click.pass_context
+@handle_tv_errors
 def pair(ctx: click.Context, tv_ctx: TVContext) -> None:
     """Pair with the TV to obtain authentication credentials.
 
@@ -189,8 +238,7 @@ def pair(ctx: click.Context, tv_ctx: TVContext) -> None:
     try:
         credentials = tv_ctx.remote.pair(prompt_pin, tv_ctx.id)
     except PhilipsTVPairingError as err:
-        click.echo(str(err), err=True)
-        ctx.exit(1)
+        raise click.ClickException(str(err))
 
     click.echo("Pairing successful!")
     click.echo(f"ID:\t{credentials[0]}")
@@ -210,6 +258,7 @@ def power() -> None:
 
 @power.command("get", help="Get current power state.")
 @pass_tv_context
+@handle_tv_errors
 def power_get(tv_ctx: TVContext) -> None:
     click.echo("on" if tv_ctx.remote.get_power() else "off")
 
@@ -217,6 +266,7 @@ def power_get(tv_ctx: TVContext) -> None:
 @power.command("set", help="Set power state.")
 @click.argument("power", type=click.Choice(("on", "off")))
 @pass_tv_context
+@handle_tv_errors
 def power_set(tv_ctx: TVContext, power: str) -> None:
     tv_ctx.remote.set_power(True if power == "on" else False)
 
@@ -228,6 +278,7 @@ def volume() -> None:
 
 @volume.command("get", help="Get current audio volume.")
 @pass_tv_context
+@handle_tv_errors
 def volume_get(tv_ctx: TVContext) -> None:
     click.echo(tv_ctx.remote.get_volume())
 
@@ -235,6 +286,7 @@ def volume_get(tv_ctx: TVContext) -> None:
 @volume.command("set", help="Set audio volume.")
 @click.argument("volume", type=click.INT)
 @pass_tv_context
+@handle_tv_errors
 def volume_set(tv_ctx: TVContext, volume: int) -> None:
     tv_ctx.remote.set_volume(volume)
 
@@ -246,12 +298,14 @@ def channel() -> None:
 
 @channel.command("get", help="Get current TV channel.")
 @pass_tv_context
+@handle_tv_errors
 def channel_get(tv_ctx: TVContext) -> None:
     click.echo(tv_ctx.remote.get_current_channel())
 
 
 @channel.command("list", help="List all available TV channels.")
 @pass_tv_context
+@handle_tv_errors
 def channel_list(tv_ctx: TVContext) -> None:
     click.echo("\n".join(f"{no}\t{chan}" for no, chan in tv_ctx.remote.get_all_channels().items()))
 
@@ -259,21 +313,18 @@ def channel_list(tv_ctx: TVContext) -> None:
 @channel.command("set", help="Set TV channel.")
 @click.argument("channel", type=click.STRING)
 @pass_tv_context
-@click.pass_context
-def channel_set(ctx: click.Context, tv_ctx: TVContext, channel: str) -> None:
+@handle_tv_errors
+def channel_set(tv_ctx: TVContext, channel: str) -> None:
     set_channel: Union[str, int] = channel
     if channel.isdigit():
         set_channel = int(set_channel)
-    try:
-        tv_ctx.remote.set_channel(set_channel)
-    except PhilipsTVRemoteError as err:
-        click.echo(err, err=True)
-        ctx.exit(1)
+    tv_ctx.remote.set_channel(set_channel)
 
 
 @cli.command("key")
 @click.argument("keys", type=click.Choice(tuple(KEY_MAP), case_sensitive=False), nargs=-1)
 @pass_tv_context
+@handle_tv_errors
 def key(tv_ctx: TVContext, keys: Tuple[str]) -> None:
     """Emulate pressing keys on the TV remote.
 
@@ -296,6 +347,7 @@ def ambilight_power() -> None:
 
 @ambilight_power.command("get", help="Get current ambilight power state.")
 @pass_tv_context
+@handle_tv_errors
 def ambilight_power_get(tv_ctx: TVContext) -> None:
     click.echo("on" if tv_ctx.remote.get_ambilight_power() else "off")
 
@@ -303,6 +355,7 @@ def ambilight_power_get(tv_ctx: TVContext) -> None:
 @ambilight_power.command("set", help="Set ambilight power state.")
 @click.argument("power", type=click.Choice(("on", "off")))
 @pass_tv_context
+@handle_tv_errors
 def ambilight_power_set(tv_ctx: TVContext, power: str) -> None:
     tv_ctx.remote.set_ambilight_power(True if power == "on" else False)
 
@@ -317,6 +370,7 @@ def ambilight_color() -> None:
 @click.argument("g", type=click.IntRange(0, 255))
 @click.argument("b", type=click.IntRange(0, 255))
 @pass_tv_context
+@handle_tv_errors
 def ambilight_color_set(tv_ctx: TVContext, r: int, g: int, b: int) -> None:
     tv_ctx.remote.set_ambilight_color(AmbilightColor(r=r, g=g, b=b))
 
@@ -328,6 +382,7 @@ def app() -> None:
 
 @app.command("list", help="List all available applications.")
 @pass_tv_context
+@handle_tv_errors
 def app_list(tv_ctx: TVContext) -> None:
     click.echo("\n".join(tv_ctx.remote.get_applications()))
 
@@ -335,10 +390,6 @@ def app_list(tv_ctx: TVContext) -> None:
 @app.command("launch", help="Launch an application.")
 @click.argument("application", type=click.STRING)
 @pass_tv_context
-@click.pass_context
-def app_launch(ctx: click.Context, tv_ctx: TVContext, application: str) -> None:
-    try:
-        tv_ctx.remote.launch_application(application)
-    except PhilipsTVRemoteError as err:
-        click.echo(err, err=True)
-        ctx.exit(1)
+@handle_tv_errors
+def app_launch(tv_ctx: TVContext, application: str) -> None:
+    tv_ctx.remote.launch_application(application)
