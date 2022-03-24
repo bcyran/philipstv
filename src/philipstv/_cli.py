@@ -191,7 +191,7 @@ def cli(
         host = saved_data.last_host.host
         id = saved_data.last_host.id
         key = saved_data.last_host.key
-        _LOGGER.debug("Using saved data: host=%s, id=%s", host, id)
+        _LOGGER.debug("Using saved data: %r", saved_data.last_host)
     elif save:  # if all auth is given and we want to save
         PhilipsTVData(last_host=HostData(host=host, id=id, key=key)).save()
 

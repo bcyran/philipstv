@@ -25,7 +25,10 @@ class PhilipsTVError(PhilipsError):
     """
 
     def __init__(self, method: str, url: str, status_code: Optional[int] = None) -> None:
-        super().__init__(f"{method} request to {url} failed with status {status_code}")
+        message = f"{method} request to {url} failed"
+        if status_code:
+            message += f" with status {status_code}"
+        super().__init__(message)
         self.method = method
         self.url = url
         self.status_code = status_code
