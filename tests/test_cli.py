@@ -1,4 +1,5 @@
 import json
+import time
 from pathlib import Path
 from typing import Callable, List, Optional, Sequence, Union
 from unittest.mock import Mock, call, create_autospec
@@ -38,6 +39,13 @@ def remote(monkeypatch: MonkeyPatch) -> Mock:
     mock_remote.new.return_value = mock_remote
     monkeypatch.setattr("philipstv._cli.PhilipsTVRemote", mock_remote)
     return mock_remote  # type: ignore
+
+
+@pytest.fixture
+def sleep_mock(monkeypatch: MonkeyPatch) -> Mock:
+    mock_sleep = create_autospec(time.sleep)
+    monkeypatch.setattr("philipstv._cli.time", Mock(sleep=mock_sleep))
+    return mock_sleep  # type: ignore
 
 
 def run(*args: str, input: Optional[str] = None) -> Result:
@@ -227,17 +235,27 @@ def test_channel_set_error(remote: Mock) -> None:
 
 
 @pytest.mark.parametrize(
-    "given_keys, expected_keys",
+    "args, expected_keys, expected_sleep_calls",
     [
-        ([], []),
-        (["home"], [InputKeyValue.HOME]),
-        (["right", "ok"], [InputKeyValue.CURSOR_RIGHT, InputKeyValue.CONFIRM]),
+        ([], [], 0),
+        (["home"], [InputKeyValue.HOME], 0),
+        (["right", "ok"], [InputKeyValue.CURSOR_RIGHT, InputKeyValue.CONFIRM], 0),
+        (["--delay", "100", "home"], [InputKeyValue.HOME], 0),
+        (["--delay", "0", "ok", "ok"], [InputKeyValue.CONFIRM, InputKeyValue.CONFIRM], 0),
+        (["--delay", "100", "ok", "ok"], [InputKeyValue.CONFIRM, InputKeyValue.CONFIRM], 1),
     ],
 )
-def test_key(remote: Mock, given_keys: List[str], expected_keys: List[InputKeyValue]) -> None:
-    run_with_auth("key", *given_keys)
+def test_key(
+    remote: Mock,
+    sleep_mock: Mock,
+    args: List[str],
+    expected_keys: List[InputKeyValue],
+    expected_sleep_calls: int,
+) -> None:
+    run_with_auth("key", *args)
 
     assert remote.input_key.call_args_list == [call(key) for key in expected_keys]
+    assert sleep_mock.call_count == expected_sleep_calls
 
 
 def test_ambilight_power_get(remote: Mock) -> None:

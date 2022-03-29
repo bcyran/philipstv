@@ -1,4 +1,5 @@
 import logging
+import time
 from dataclasses import dataclass
 from functools import wraps
 from typing import Any, Callable, Optional, Tuple, Union
@@ -322,16 +323,27 @@ def channel_set(tv_ctx: TVContext, channel: str) -> None:
 
 
 @cli.command("key")
-@click.argument("keys", type=click.Choice(tuple(KEY_MAP), case_sensitive=False), nargs=-1)
+@click.argument(
+    "keys", type=click.Choice(tuple(KEY_MAP), case_sensitive=False), nargs=-1, required=True
+)
+@click.option(
+    "--delay", "-d", type=int, default=0, help="Delay (in milliseconds) between consecutive keys."
+)
 @pass_tv_context
 @handle_tv_errors
-def key(tv_ctx: TVContext, keys: Tuple[str]) -> None:
+def key(tv_ctx: TVContext, keys: Tuple[str, ...], delay: Optional[int]) -> None:
     """Emulate pressing keys on the TV remote.
 
     You can provide any number of key names, separated by a space. They will be sent to the TV in
     the given order.
+
+    When providing multiple keys, they can be sent faster than the TV can react. To prevent this,
+    you can use '--delay' option.
     """
-    for key in keys:
+    tv_ctx.remote.input_key(KEY_MAP[keys[0]])
+    for key in keys[1:]:
+        if delay:
+            time.sleep(delay / 1000)
         tv_ctx.remote.input_key(KEY_MAP[key])
 
 
