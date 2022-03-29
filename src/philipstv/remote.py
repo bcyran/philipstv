@@ -6,8 +6,11 @@ from .api import PhilipsTVAPI
 from .exceptions import PhilipsTVRemoteError
 from .model import (
     AmbilightColor,
+    AmbilightColors,
+    AmbilightLayer,
     AmbilightPower,
     AmbilightPowerValue,
+    AmbilightTopology,
     Application,
     Channel,
     ChannelID,
@@ -49,6 +52,7 @@ class PhilipsTVRemote:
         self._api = api
         self._channels_cache: List[Channel] = []
         self._applications_cache: List[Application] = []
+        self._ambilight_topology_cache: Optional[AmbilightTopology] = None
 
     @property
     def host(self) -> str:
@@ -228,14 +232,54 @@ class PhilipsTVRemote:
         value = AmbilightPowerValue.ON if power is True else AmbilightPowerValue.OFF
         self._api.set_ambilight_power(AmbilightPower(power=value))
 
-    def set_ambilight_color(self, color: AmbilightColor) -> None:
+    def set_ambilight_color(
+        self,
+        color: Optional[AmbilightColor] = None,
+        *,
+        left: Optional[AmbilightColor] = None,
+        top: Optional[AmbilightColor] = None,
+        right: Optional[AmbilightColor] = None,
+        bottom: Optional[AmbilightColor] = None,
+    ) -> None:
         """Set ambilight color.
 
+        On sides without given color, the color will not be changed. ``color`` defines color for all
+        sides. If any of ``left``, ``top``, ``right`` or ``bottom`` args are given, they override
+        ``color`` on that side.
+
         Args:
-            color: A color to set.
+            color: A color to set on all sides.
+            left: A color to set on the left side.
+            top: A color to set on the top side.
+            right: A color to set on the right side.
+            bottom: A color to set on the bottom side.
 
         """
-        self._api.set_ambilight_cached(color)
+        if color and not any((left, top, right, bottom)):
+            self._api.set_ambilight_cached(color)
+            return
+
+        if not self._ambilight_topology_cache:
+            self._ambilight_topology_cache = self._api.get_ambilight_topology()
+
+        topology = self._ambilight_topology_cache
+        sides = {}
+        if set_left := (left or color):
+            sides["left"] = self._create_ambilight_side(set_left, topology.left)
+        if set_top := (top or color):
+            sides["top"] = self._create_ambilight_side(set_top, topology.top)
+        if set_right := (right or color):
+            sides["right"] = self._create_ambilight_side(set_right, topology.right)
+        if set_bottom := (bottom or color):
+            sides["bottom"] = self._create_ambilight_side(set_bottom, topology.bottom)
+
+        colors = AmbilightColors(__root__={"layer1": AmbilightLayer(**sides)})
+        self._api.set_ambilight_cached(colors)
+
+    def _create_ambilight_side(
+        self, color: AmbilightColor, points: int
+    ) -> Dict[str, AmbilightColor]:
+        return {str(point): color for point in range(points)}
 
     def get_applications(self) -> List[str]:
         """Return a list of available applications.

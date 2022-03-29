@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Dict, Union
 from unittest.mock import Mock, create_autospec
 
 import pytest
@@ -8,8 +8,11 @@ from philipstv import PhilipsTVAPI, PhilipsTVPairer, PhilipsTVRemote, PhilipsTVR
 from philipstv.model import (
     AllChannels,
     AmbilightColor,
+    AmbilightColors,
+    AmbilightLayer,
     AmbilightPower,
     AmbilightPowerValue,
+    AmbilightTopology,
     Application,
     ApplicationComponent,
     ApplicationIntent,
@@ -247,6 +250,32 @@ def test_set_ambilight_color(api_mock: Mock) -> None:
     PhilipsTVRemote(api_mock).set_ambilight_color(AmbilightColor(r=0, g=69, b=255))
 
     api_mock.set_ambilight_cached.assert_called_once_with(AmbilightColor(r=0, g=69, b=255))
+
+
+def test_set_ambilight_color_sides(api_mock: Mock) -> None:
+    left_color = AmbilightColor(r=255, g=0, b=0)
+    top_color = AmbilightColor(r=0, g=255, b=0)
+    right_color = AmbilightColor(r=0, g=0, b=255)
+    bottom_color = AmbilightColor(r=125, g=0, b=125)
+    topology = AmbilightTopology(layers=1, left=2, top=3, right=2, bottom=3)
+    api_mock.get_ambilight_topology.return_value = topology
+
+    PhilipsTVRemote(api_mock).set_ambilight_color(
+        left=left_color, top=top_color, right=right_color, bottom=bottom_color
+    )
+
+    api_mock.set_ambilight_cached.assert_called_once_with(
+        AmbilightColors(
+            __root__={
+                "layer1": AmbilightLayer(
+                    left={str(point): left_color for point in range(topology.left)},
+                    top={str(point): top_color for point in range(topology.top)},
+                    right={str(point): right_color for point in range(topology.right)},
+                    bottom={str(point): bottom_color for point in range(topology.bottom)},
+                )
+            }
+        )
+    )
 
 
 def test_get_applications(api_mock: Mock) -> None:
