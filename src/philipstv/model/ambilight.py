@@ -1,4 +1,4 @@
-from typing import Dict, Union
+from typing import Dict, Tuple, Union
 
 from pydantic.fields import Field
 
@@ -58,6 +58,19 @@ class AmbilightColor(APIObject):
     """Green color component."""
     b: int = Field(ge=0, le=255)
     """Blue color component."""
+
+    @classmethod
+    def from_tuple(cls, color_tuple: Tuple[int, int, int]) -> "AmbilightColor":
+        """Create :class:`AmbilightColor` instance from a tuple.
+
+        Args:
+            color_tuple: Tuple of three integers representing RGB color.
+
+        Returns:
+            Model instance.
+
+        """
+        return cls(r=color_tuple[0], g=color_tuple[1], b=color_tuple[2])
 
 
 class AmbilightLayer(APIObject):

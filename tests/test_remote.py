@@ -1,4 +1,4 @@
-from typing import Dict, Union
+from typing import Union
 from unittest.mock import Mock, create_autospec
 
 import pytest

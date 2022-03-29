@@ -5,6 +5,7 @@ from functools import wraps
 from typing import Any, Callable, Optional, Tuple, Union
 
 import click
+from click.exceptions import UsageError
 
 from philipstv import __version__
 
@@ -20,6 +21,8 @@ from .model import AmbilightColor, InputKeyValue
 from .remote import PhilipsTVRemote
 
 _LOGGER = logging.getLogger(__name__)
+
+ColorArg = Tuple[int, int, int]
 
 
 COMMON_ERROR_MESSAGE = """\
@@ -377,14 +380,49 @@ def ambilight_color() -> None:
     pass
 
 
-@ambilight_color.command("set", help="Set ambilight color.")
-@click.argument("r", type=click.IntRange(0, 255))
-@click.argument("g", type=click.IntRange(0, 255))
-@click.argument("b", type=click.IntRange(0, 255))
+@ambilight_color.command("set")
+@click.argument("color", type=(int, int, int), required=False)
+@click.option("--left", "-l", type=(int, int, int), help="Color to set on the left side.")
+@click.option("--top", "-t", type=(int, int, int), help="Color to set on the top side.")
+@click.option("--right", "-r", type=(int, int, int), help="Color to set on the right side.")
+@click.option("--bottom", "-b", type=(int, int, int), help="Color to set on the bottom side.")
 @pass_tv_context
 @handle_tv_errors
-def ambilight_color_set(tv_ctx: TVContext, r: int, g: int, b: int) -> None:
-    tv_ctx.remote.set_ambilight_color(AmbilightColor(r=r, g=g, b=b))
+def ambilight_color_set(
+    tv_ctx: TVContext,
+    color: Optional[ColorArg],
+    left: Optional[ColorArg],
+    top: Optional[ColorArg],
+    right: Optional[ColorArg],
+    bottom: Optional[ColorArg],
+) -> None:
+    """Set ambilight color.
+
+    If 'COLOR' positional argument is given, it will be set on all sides. If value for any of the
+    sides is specified, it overrides the 'COLOR' value. Sides which aren't specified either through
+    positional argument or through options, will keep their current color.
+
+    Each color value should be specified in RGB as three integers in range 0-255.
+
+    \b
+    Examples:
+        philipstv ambilight color set 255 0 0
+        philipstv ambilight color set 255 0 0 --top 0 255 0
+        philipstv ambilight color set --left 0 0 255 --right 0 0 255
+
+    """
+    if not any((color, left, top, right, bottom)):
+        raise UsageError(
+            "Missing argument 'COLOR' or one of: '--left', '--top', '--right', '--bottom'."
+        )
+
+    tv_ctx.remote.set_ambilight_color(
+        color=AmbilightColor.from_tuple(color) if color else None,
+        left=AmbilightColor.from_tuple(left) if left else None,
+        top=AmbilightColor.from_tuple(top) if top else None,
+        right=AmbilightColor.from_tuple(right) if right else None,
+        bottom=AmbilightColor.from_tuple(bottom) if bottom else None,
+    )
 
 
 @cli.group("app", help="Manage applications.")

@@ -273,9 +273,24 @@ def test_ambilight_power_set(remote: Mock) -> None:
 
 
 def test_ambilight_color_set(remote: Mock) -> None:
-    run_with_auth("ambilight", "color", "set", "255", "0", "0")
+    run_with_auth("ambilight", "color", "set", "255", "0", "0", "--top", "0", "255", "0")
 
-    remote.set_ambilight_color.assert_called_once_with(AmbilightColor(r=255, g=0, b=0))
+    remote.set_ambilight_color.assert_called_once_with(
+        color=AmbilightColor(r=255, g=0, b=0),
+        left=None,
+        top=AmbilightColor(r=0, g=255, b=0),
+        right=None,
+        bottom=None,
+    )
+
+
+def test_ambilight_color_set_error(remote: Mock) -> None:
+    result = run_with_auth("ambilight", "color", "set")
+
+    remote.set_ambilight_color.assert_not_called()
+
+    assert result.exit_code != 0
+    assert "Error" in result.stderr
 
 
 def test_app_list(remote: Mock) -> None:
