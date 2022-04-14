@@ -64,6 +64,10 @@ Documentation
 -------------
 See full documentation: `Read the Docs: philipstv <https://philipstv.readthedocs.io>`_.
 
+See also
+--------
+- `PhilipsTV GUI <https://github.com/bcyran/philipstv-gui>`_ - GUI application built with this library.
+
 Resources
 ---------
 - `Fantastic unofficial API documentation <https://github.com/eslavnov/pylips/blob/master/docs/Home.md>`_ and `script <https://github.com/eslavnov/pylips>`_ by `@eslavnov <https://github.com/eslavnov>`_.
