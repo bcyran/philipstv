@@ -19,6 +19,13 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Typing :: Typed"
 ]
+packages = [
+    { include = "philipstv", from = "src"}
+]
+include = [
+    { path = "src/philipstv/**/*" },
+    { path = "tests/**/*", format = "sdist" }
+]
 
 
 [tool.poetry.scripts]
