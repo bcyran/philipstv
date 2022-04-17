@@ -23,8 +23,9 @@ packages = [
     { include = "philipstv", from = "src"}
 ]
 include = [
-    { path = "src/philipstv/**/*" },
-    { path = "tests/**/*", format = "sdist" }
+    { path = "src/philipstv/**/*.py" },
+    { path = "src/philipstv/py.typed" },
+    { path = "tests/**/*.py", format = "sdist" }
 ]
 
 
