@@ -46,6 +46,9 @@ Features:
 Installation
 ------------
 
+PyPI
+^^^^
+
 If you plan to use the CLI:
 
 .. code-block:: console
@@ -59,6 +62,12 @@ If you only need library for use in Python code:
    $ pip install philipstv
 
 .. -end-intro-
+
+Arch Linux (AUR)
+^^^^^^^^^^^^^^^^
+
+`philipstv AUR package <https://aur.archlinux.org/packages/philipstv>`_ is available.
+
 
 Documentation
 -------------
