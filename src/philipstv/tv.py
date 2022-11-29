@@ -11,7 +11,7 @@ from urllib3.exceptions import InsecureRequestWarning
 from .exceptions import PhilipsTVError
 from .types import Credentials
 
-urllib3.disable_warnings(InsecureRequestWarning)  # type: ignore
+urllib3.disable_warnings(InsecureRequestWarning)
 
 
 _LOGGER = logging.getLogger(__name__)
