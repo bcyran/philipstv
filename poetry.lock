@@ -948,7 +948,7 @@ test = ["coverage", "pycodestyle", "pylint", "pytest"]
 
 [[package]]
 name = "types-appdirs"
-version = "1.4.2"
+version = "1.4.3.1"
 description = "Typing stubs for appdirs"
 category = "dev"
 optional = false
@@ -1027,7 +1027,7 @@ docs = ["Sphinx", "furo", "enum-tools"]
 [metadata]
 lock-version = "1.1"
 python-versions = "~3.11"
-content-hash = "8dd496e334578f307930f35d451eb5b50e181c9a507284ab84c0b44169ab71ea"
+content-hash = "10d1a619562e2415bcee7401d7f5ff38f01c6f137142625f821b3fce7a41562f"
 
 [metadata.files]
 alabaster = [
@@ -1554,8 +1554,8 @@ tox-poetry = [
     {file = "tox_poetry-0.4.1-py2.py3-none-any.whl", hash = "sha256:11d9cd4e51d4cd9484b3ba63f2650ab4cfb4096e5f0682ecf561ddfc3c8e8c92"},
 ]
 types-appdirs = [
-    {file = "types-appdirs-1.4.2.tar.gz", hash = "sha256:2edb1dca35db16eb4c1244ba8502eb046e637dc0e2857117fe148af927ac028f"},
-    {file = "types_appdirs-1.4.2-py3-none-any.whl", hash = "sha256:051a48c3db104d6836954bc17d9608c59a71caf2f7d9b65738225c5f6ed149ef"},
+    {file = "types-appdirs-1.4.3.1.tar.gz", hash = "sha256:cf77d89a5cb86b1d40ea9b96f643fbe68ecd28c1739290e91612c44cd9bb92a1"},
+    {file = "types_appdirs-1.4.3.1-py3-none-any.whl", hash = "sha256:9cff9736bb4ea0baa2ce452244ccaae8932b852f7eb7a7afba3222c5ba90377a"},
 ]
 types-requests = [
     {file = "types-requests-2.28.11.5.tar.gz", hash = "sha256:a7df37cc6fb6187a84097da951f8e21d335448aa2501a6b0a39cbd1d7ca9ee2a"},
