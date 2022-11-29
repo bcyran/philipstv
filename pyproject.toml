@@ -57,7 +57,7 @@ types-requests = "^2.28.11"
 tox-poetry = "^0.4.1"
 requests-mock = "^1.10.0"
 pytest-cov = "^4.0.0"
-types-appdirs = "^1.4.2"
+types-appdirs = "^1.4.3"
 sphinx-autobuild = "^2021.3.14"
 
 [build-system]
