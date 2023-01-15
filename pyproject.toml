@@ -9,7 +9,7 @@ repository = "https://github.com/bcyran/philipstv"
 documentation = "https://philipstv.readthedocs.io"
 keywords = ["cli", "tv", "api-wrapper", "philips", "ambilight"]
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
     "Intended Audience :: Developers",
     "Intended Audience :: End Users/Desktop",
@@ -17,6 +17,7 @@ classifiers = [
     "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Typing :: Typed"
 ]
 packages = [
