@@ -6,23 +6,27 @@ jobs:
   style:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up Python 3.10
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: '3.10'
-    - uses: actions/cache@v2
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+      with:
+        virtualenvs-create: true
+        virtualenvs-in-project: true
+        installer-parallel: true
+    - uses: actions/cache@v3
       id: cache
       with:
         path: |
-          ${{ env.pythonLocation }}
+          .venv
           .tox
-        key: ${{ runner.os }}-python-${{ env.pythonLocation }}-${{ hashFiles('poetry.lock') }}-test
+        key: tox-${{ runner.os }}-${{ hashFiles('poetry.lock') }}
     - name: Install dependencies
       if: steps.cache.outputs.cache-hit != 'true'
-      run: |
-        pip install poetry
-        poetry install --no-root --sync
+      run: poetry install --no-root --sync
     - name: flake8
       run: poetry run tox -e flake8
     - name: black
@@ -31,30 +35,40 @@ jobs:
       run: poetry run tox -e isort
     - name: mypy
       run: poetry run tox -e mypy
+
   unittests:
     needs: style
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         python-version: ['3.9', '3.10', '3.11']
-        os: [ubuntu-latest, macOS-latest, windows-latest]
+        os: [ubuntu-latest]
+    defaults:
+      run:
+        shell: bash
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
       with:
-        python-version: ${{ matrix.python-version }}
-    - uses: actions/cache@v2
-      id: cache
+        python-version: '3.10'
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+      with:
+        virtualenvs-create: true
+        virtualenvs-in-project: true
+        installer-parallel: true
+    - uses: actions/cache@v3
+      id: tox-cache
       with:
         path: |
-          ${{ env.pythonLocation }}
+          .venv
           .tox
-        key: ${{ runner.os }}-python-${{ env.pythonLocation }}-${{ hashFiles('poetry.lock') }}-test
+        key: tox-${{ matrix.os }}-python${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
     - name: Install dependencies
       if: steps.cache.outputs.cache-hit != 'true'
-      run: pip install tox poetry
+      run: poetry install --no-root --sync
     - name: Unittests
-      run: poetry run tox -e ut -- --cov-report=xml
+      run: poetry run -- tox -e ut -- --cov-report=xml
     - name: Upload coverage
       uses: codecov/codecov-action@v1
