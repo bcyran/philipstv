@@ -1553,14 +1553,14 @@ testing = ["build[virtualenv] (>=0.10)", "covdefaults (>=2.2.2)", "devpi-process
 
 [[package]]
 name = "types-appdirs"
-version = "1.4.3.2"
+version = "1.4.3.5"
 description = "Typing stubs for appdirs"
 category = "dev"
 optional = false
 python-versions = "*"
 files = [
-    {file = "types-appdirs-1.4.3.2.tar.gz", hash = "sha256:bf8caebdff6e574407859531391d87be4d185647814dad89b41372198a6e718b"},
-    {file = "types_appdirs-1.4.3.2-py3-none-any.whl", hash = "sha256:014b8c3c5ab55c54a917ea2d12991c93521ddfb18f6eb6c2ef03678a81ae3e45"},
+    {file = "types-appdirs-1.4.3.5.tar.gz", hash = "sha256:83268da64585361bfa291f8f506a209276212a0497bd37f0512a939b3d69ff14"},
+    {file = "types_appdirs-1.4.3.5-py3-none-any.whl", hash = "sha256:337c750e423c40911d389359b4edabe5bbc2cdd5cd0bd0518b71d2839646273b"},
 ]
 
 [[package]]
