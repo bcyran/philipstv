@@ -1431,13 +1431,13 @@ files = [
 
 [[package]]
 name = "tox"
-version = "4.11.0"
+version = "4.11.3"
 description = "tox is a generic virtualenv management and test command line tool"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "tox-4.11.0-py3-none-any.whl", hash = "sha256:7f7e5f1b20115560e610b9a11143bbcf48270ec3293f36c0a18be7b287c3b41f"},
-    {file = "tox-4.11.0.tar.gz", hash = "sha256:cc665e1e6b095f843b952ea5696f7a64bb64982aff62b62547ef171fa60e21eb"},
+    {file = "tox-4.11.3-py3-none-any.whl", hash = "sha256:599af5e5bb0cad0148ac1558a0b66f8fff219ef88363483b8d92a81e4246f28f"},
+    {file = "tox-4.11.3.tar.gz", hash = "sha256:5039f68276461fae6a9452a3b2c7295798f00a0e92edcd9a3b78ba1a73577951"},
 ]
 
 [package.dependencies]
@@ -1572,4 +1572,4 @@ docs = ["Sphinx", "enum-tools", "furo"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "f699319da5a33944fe9e7f735ecec113e0dc183a897b517197e415fc43ae7422"
+content-hash = "021743212b5af98309cf326b4c884a1d8fb12fb167fa5506111256e4700728c4"
