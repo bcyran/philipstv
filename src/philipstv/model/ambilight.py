@@ -1,5 +1,6 @@
 from typing import Dict, Tuple, Union
 
+from pydantic import RootModel
 from pydantic.fields import Field
 
 from .base import APIObject, StrEnum
@@ -92,23 +93,23 @@ class AmbilightLayer(APIObject):
     """Colors of pixels on the bottom edge."""
 
 
-class AmbilightColors(APIObject):
+class AmbilightColors(APIObject, RootModel[Dict[str, AmbilightLayer]]):
     """Model of full Amblight per-pixel color definition.
 
     This model is actually a wrapper around a dict since layer names are not predefined.
-    Values should be set as dict using ``__root__`` kwarg in constructor and accessed as in normal
+    Values should be set as dict passed to constructor and accessed as in normal
     dict using indexing::
 
-        colors = AmbilightColors(__root__={"layer1": AmbilightLayer()})
+        colors = AmbilightColors({"layer1": AmbilightLayer()})
         layer1 = colors["layer1"]
 
     """
 
-    __root__: Dict[str, AmbilightLayer] = {}
+    root: Dict[str, AmbilightLayer]
     """Mapping of layer name to :class:`AmbilightLayer`."""
 
     def __getitem__(self, item: str) -> AmbilightLayer:
-        return self.__root__[item]
+        return self.root[item]
 
 
 AmbilightColorSettings = Union[

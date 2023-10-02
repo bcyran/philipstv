@@ -16,6 +16,8 @@ class APIObject(BaseModel):
 
     """
 
+    model_config = {"populate_by_name": True, "use_enum_values": True}
+
     def dump(self) -> Any:
         """Dump the object's JSON data.
 
@@ -25,8 +27,7 @@ class APIObject(BaseModel):
             Model's JSON data.
 
         """
-        data = super().dict(by_alias=True)
-        return data["__root__"] if self.__custom_root_type__ else data
+        return self.model_dump(by_alias=True)
 
     @classmethod
     def parse(cls: Type[_SelfAPIObject], raw: Any) -> _SelfAPIObject:
@@ -45,11 +46,7 @@ class APIObject(BaseModel):
             ValidationError: if given JSON data cannot be parsed into this model.
 
         """
-        return cls.parse_obj(raw)
-
-    class Config:
-        allow_population_by_field_name = True
-        use_enum_values = True
+        return cls.model_validate(raw)
 
 
 class StrEnum(str, Enum):

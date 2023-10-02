@@ -114,7 +114,7 @@ class PhilipsTVRemote:
             id=id,
             device_name=uname_info.node,
             device_os=uname_info.system,
-            app_id=69,
+            app_id="69",
             app_name="philipstv",
             type="native",
         )
@@ -273,7 +273,8 @@ class PhilipsTVRemote:
         if set_bottom := (bottom or color):
             sides["bottom"] = self._create_ambilight_side(set_bottom, topology.bottom)
 
-        colors = AmbilightColors(__root__={"layer1": AmbilightLayer(**sides)})
+        # pydantic.mypy plugin issue: https://github.com/pydantic/pydantic/discussions/7418
+        colors = AmbilightColors({"layer1": AmbilightLayer(**sides)})  # type: ignore[misc]
         self._api.set_ambilight_cached(colors)
 
     def _create_ambilight_side(
