@@ -36,12 +36,12 @@ _T = TypeVar("_T", bound=APIObject)
 
 
 @contextmanager
-def _wrap_unauthorized_exceptions(path: str) -> Iterator[None]:
+def _wrap_unauthorized_exceptions(method: str, path: str) -> Iterator[None]:
     try:
         yield
     except PhilipsTVError as exc:
         if exc.status_code == 401:
-            raise PhilipsTVAPIUnauthorizedError(exc.method, path) from exc
+            raise PhilipsTVAPIUnauthorizedError(method, path) from exc
         raise
 
 
@@ -256,11 +256,11 @@ class PhilipsTVAPI:
             return response_model.parse(raw_response)
 
     def _api_post(self, path: str, payload: Optional[APIObject] = None) -> Any:
-        with _wrap_unauthorized_exceptions(path):
+        with _wrap_unauthorized_exceptions("POST", path):
             return self._tv.post(self._api_path(path), payload.dump() if payload else None)
 
     def _api_get(self, path: str) -> Any:
-        with _wrap_unauthorized_exceptions(path):
+        with _wrap_unauthorized_exceptions("GET", path):
             return self._tv.get(self._api_path(path))
 
     def _api_path(self, path: str) -> str:
