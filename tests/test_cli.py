@@ -107,9 +107,9 @@ def test_saves_data(data_file: Path, remote: Mock) -> None:
     run("--host", given_host, "--id", given_id, "--key", given_key, "--save", "power", "get")
 
     assert data_file.exists() is True
-    assert data_file.read_text() == json.dumps(
-        {"last_host": {"host": given_host, "id": given_id, "key": given_key}}
-    )
+    assert json.loads(data_file.read_text()) == {
+        "last_host": {"host": given_host, "id": given_id, "key": given_key}
+    }
 
 
 def test_reads_saved_data(data_file: Path, remote: Mock) -> None:
@@ -124,6 +124,16 @@ def test_reads_saved_data(data_file: Path, remote: Mock) -> None:
     run("power", "get")
 
     remote.new.assert_called_once_with(given_host, (given_id, given_key))
+
+
+def test_ignores_malformed_saved_data(data_file: Path, remote: Mock) -> None:
+    data_file.touch()
+    data_file.write_text(json.dumps({"whatever": {}}))
+
+    result = run("power", "get")
+
+    assert result.exit_code != 0
+    assert "No TV data" in result.stderr
 
 
 def test_pair(remote: Mock) -> None:
@@ -152,9 +162,9 @@ def test_pair_save(remote: Mock, data_file: Path) -> None:
     run("--host", given_host, "--id", given_id, "--save", "pair")
 
     assert data_file.exists() is True
-    assert data_file.read_text() == json.dumps(
-        {"last_host": {"host": given_host, "id": given_id, "key": given_key}}
-    )
+    assert json.loads(data_file.read_text()) == {
+        "last_host": {"host": given_host, "id": given_id, "key": given_key}
+    }
 
 
 def test_pair_error(remote: Mock) -> None:
