@@ -67,3 +67,6 @@ autoclass_content = "class"
 autodoc_typehints = "signature"
 autodoc_typehints_format = "short"
 autodoc_typehints_description_target = "documented"
+autodoc_default_options = {
+    "exclude-members": "model_config, model_fields",
+}
