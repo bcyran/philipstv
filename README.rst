@@ -18,7 +18,7 @@ philipstv
    :alt: pypi
 
 .. image:: https://readthedocs.org/projects/philipstv/badge/?version=stable
-   :target: https://philipstv.readthedocs.io/en/latest/?badge=stable
+   :target: https://philipstv.readthedocs.io/en/stable/?badge=stable
    :alt: Documentation status
 
 .. image:: https://img.shields.io/pypi/pyversions/philipstv
