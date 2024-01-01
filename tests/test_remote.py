@@ -265,8 +265,7 @@ def test_set_ambilight_color_sides(api_mock: Mock) -> None:
     )
 
     api_mock.set_ambilight_cached.assert_called_once_with(
-        # pydantic.mypy plugin issue: https://github.com/pydantic/pydantic/discussions/7418
-        AmbilightColors(  # type: ignore[misc]
+        AmbilightColors(
             {
                 "layer1": AmbilightLayer(
                     left={str(point): left_color for point in range(topology.left)},
