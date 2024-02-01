@@ -41,7 +41,7 @@ pydantic = "^2.4.2"
 click = { version = "^8.0.3", optional = true }
 appdirs = { version = "^1.4.4", optional = true }
 Sphinx = { version = "^7.2.6", optional = true }
-furo = { version = "^2023.3.27", optional = true }
+furo = { version = "^2024.1.29", optional = true }
 enum-tools = {extras = ["sphinx"], version = "^0.11.0", optional = true }
 
 [tool.poetry.extras]
