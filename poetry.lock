@@ -498,13 +498,13 @@ dates = ["pytz (>=2019.1)"]
 
 [[package]]
 name = "enum-tools"
-version = "0.11.0"
+version = "0.12.0"
 description = "Tools to expand Python's enum module."
 optional = true
 python-versions = ">=3.6"
 files = [
-    {file = "enum_tools-0.11.0-py3-none-any.whl", hash = "sha256:9e76186ff4fd1798a64a855d334e245a7d2b67970c40029acccff06c58bf0535"},
-    {file = "enum_tools-0.11.0.tar.gz", hash = "sha256:ed10ae4c2109c52e6ca17505a3bdb173b2554f5f0449677621829023a9d8bd33"},
+    {file = "enum_tools-0.12.0-py3-none-any.whl", hash = "sha256:d69b019f193c7b850b17d9ce18440db7ed62381571409af80ccc08c5218b340a"},
+    {file = "enum_tools-0.12.0.tar.gz", hash = "sha256:13ceb9376a4c5f574a1e7c5f9c8eb7f3d3fbfbb361cc18a738df1a58dfefd460"},
 ]
 
 [package.dependencies]
@@ -1963,4 +1963,4 @@ docs = ["Sphinx", "enum-tools", "furo"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "5951db0fea1ae9c5f0675fb8df06b062a3f605c2bb145e4bd2417911ab1f6068"
+content-hash = "44520f19b1802b4cfc6c365a1a2fd01e37491728de052d930762e134bbdf3016"
