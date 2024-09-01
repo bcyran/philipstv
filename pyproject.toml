@@ -51,7 +51,7 @@ docs = ["sphinx", "furo", "enum-tools"]
 [tool.poetry.dev-dependencies]
 pytest = "^8.3.2"
 black = "^24.4.2"
-mypy = "^1.10"
+mypy = "^1.11"
 flake8 = "^7.1.1"
 isort = "^5.13.2"
 tox = "^4.16.0"
