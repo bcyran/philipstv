@@ -49,7 +49,7 @@ cli = ["click", "appdirs"]
 docs = ["sphinx", "furo", "enum-tools"]
 
 [tool.poetry.dev-dependencies]
-pytest = "^8.3.3"
+pytest = "^8.3.4"
 black = "^24.10.0"
 mypy = "^1.14"
 flake8 = "^7.1.1"
