@@ -57,7 +57,7 @@ isort = "^6.0.1"
 tox = "^4.30.2"
 types-requests = "^2.32.4"
 requests-mock = "^1.12.1"
-pytest-cov = "^6.2.1"
+pytest-cov = "^7.0.0"
 types-appdirs = "^1.4.3"
 sphinx-autobuild = "^2024.10.3"
 
