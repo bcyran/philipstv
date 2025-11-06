@@ -44,6 +44,9 @@
               packages = with pkgs; [
                 pyright
               ];
+              enterShell = ''
+                ${pkgs.lib.getExe pkgs.patchelf} --set-interpreter ${pkgs.stdenv.cc.bintools.dynamicLinker} $VIRTUAL_ENV/bin/ruff ./.tox/**/bin/ruff
+              '';
             })
           ];
         };
