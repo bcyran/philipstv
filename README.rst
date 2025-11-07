@@ -1,8 +1,8 @@
 philipstv
 =========
 
-.. image:: https://github.com/bcyran/philipstv/workflows/CI/badge.svg?event=push
-   :target: https://github.com/bcyran/philipstv/actions?query=event%3Apush+branch%3Amaster+workflow%3ACI
+.. image:: https://github.com/bcyran/philipstv/actions/workflows/test.yml/badge.svg
+   :target: https://github.com/bcyran/philipstv/actions/workflows/test.yml
    :alt: CI
 
 .. image:: https://codecov.io/gh/bcyran/philipstv/branch/master/graph/badge.svg?token=ROJONX34RB
