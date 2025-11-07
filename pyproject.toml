@@ -1,12 +1,10 @@
-[tool.poetry]
+[project]
 name = "philipstv"
-version = "0.0.0"  # this will be set during build by poetry-dynamic-versioning
+dynamic = ["version"]
 description = "CLI and library to control Philips Android-powered TVs."
-license = "MIT"
-authors = ["Bazyli Cyran <bazyli@cyran.dev>"]
 readme = "README.rst"
-repository = "https://github.com/bcyran/philipstv"
-documentation = "https://philipstv.readthedocs.io"
+requires-python = ">=3.10"
+maintainers = [{ name = "Bazyli Cyran", email = "bazyli@cyran.dev" }]
 keywords = ["cli", "tv", "api-wrapper", "philips", "ambilight"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
@@ -20,36 +18,32 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
-    "Typing :: Typed"
+    "Typing :: Typed",
 ]
-packages = [
-    { include = "philipstv", from = "src"}
-]
+dependencies = ["requests>=2.27.1", "pydantic>=2.4.2"]
+
+[project.optional-dependencies]
+cli = ["click>=8.2.0", "appdirs>=1.4.4"]
+docs = ["sphinx>=7.2.6", "furo>=2025.7.19", "enum-tools[sphinx]>=0.13.0"]
+
+[project.urls]
+repository = "https://github.com/bcyran/philipstv"
+documentation = "https://philipstv.readthedocs.io"
+
+[project.scripts]
+philipstv = "philipstv.__main__:wrapped_cli"
+
+[tool.poetry]
+license = "MIT"
+packages = [{ include = "philipstv", from = "src" }]
 include = [
     { path = "src/philipstv/**/*.py" },
     { path = "src/philipstv/py.typed" },
-    { path = "tests/**/*.py", format = "sdist" }
+    { path = "tests/**/*.py", format = "sdist" },
 ]
+version = "0.0.0"
 
-
-[tool.poetry.scripts]
-philipstv = "philipstv.__main__:wrapped_cli"
-
-[tool.poetry.dependencies]
-python = "^3.10"
-requests = "^2.27.1"
-pydantic = "^2.4.2"
-click = { version = "^8.2.0", optional = true }
-appdirs = { version = "^1.4.4", optional = true }
-Sphinx = { version = "^7.2.6", optional = true }
-furo = { version = "^2025.7.19", optional = true }
-enum-tools = {extras = ["sphinx"], version = "^0.13.0", optional = true }
-
-[tool.poetry.extras]
-cli = ["click", "appdirs"]
-docs = ["sphinx", "furo", "enum-tools"]
-
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 pytest = "^8.4.2"
 black = "^25.9.0"
 mypy = "^1.17"
@@ -65,6 +59,9 @@ sphinx-autobuild = "^2024.10.3"
 [build-system]
 requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning"]
 build-backend = "poetry_dynamic_versioning.backend"
+
+[tool.poetry.requires-plugins]
+poetry-dynamic-versioning = { version = ">=1.0.0,<2.0.0", extras = ["plugin"] }
 
 [tool.poetry-dynamic-versioning]
 enable = true
@@ -82,9 +79,7 @@ files = ["src/philipstv/__init__.py"]
 [tool.mypy]
 strict = true
 show_error_codes = true
-plugins = [
-    "pydantic.mypy"
-]
+plugins = ["pydantic.mypy"]
 
 [tool.black]
 line-length = 100
@@ -95,15 +90,10 @@ line_length = 100
 
 [tool.coverage.run]
 source = ["philipstv"]
-omit = [
-    "src/philipstv/__main__.py"
-]
+omit = ["src/philipstv/__main__.py"]
 
 [tool.coverage.report]
 show_missing = true
 skip_covered = true
 skip_empty = true
-exclude_lines = [
-    "raise NotImplementedError",
-    "pass"
-]
+exclude_lines = ["raise NotImplementedError", "pass"]
