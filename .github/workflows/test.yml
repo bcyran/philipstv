@@ -71,4 +71,4 @@ jobs:
     - name: Unittests
       run: poetry run -- tox -e ut -- --cov-report=xml
     - name: Upload coverage
-      uses: codecov/codecov-action@v1
+      uses: codecov/codecov-action@v5
