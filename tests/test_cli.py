@@ -49,7 +49,7 @@ def sleep_mock(monkeypatch: MonkeyPatch) -> Mock:
 
 
 def run(*args: str, input: Optional[str] = None) -> Result:
-    return CliRunner(mix_stderr=False).invoke(cli, args, input=input)
+    return CliRunner().invoke(cli, args, input=input)
 
 
 def run_with_auth(*args: str, input: Optional[str] = None) -> Result:
