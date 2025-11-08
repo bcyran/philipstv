@@ -46,6 +46,13 @@ Features:
 Installation
 ------------
 
+Package Repositories
+^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://repology.org/badge/vertical-allrepos/philipstv.svg
+   :target: https://repology.org/project/philipstv/versions
+   :alt: Packaging status
+
 PyPI
 ^^^^
 
