@@ -44,7 +44,7 @@ include = [
 version = "0.0.0"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^8.4.2"
+pytest = "^9.0.1"
 black = "^25.9.0"
 mypy = "^1.17"
 flake8 = "^7.3.0"
