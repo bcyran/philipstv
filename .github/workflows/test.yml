@@ -17,14 +17,12 @@ jobs:
       run: uv python install 3.10
     - name: Install dependencies
       run: uv sync --extra cli --group dev
-    - name: flake8
-      run: uv run poe flake8
-    - name: black
-      run: uv run poe black
-    - name: isort
-      run: uv run poe isort
-    - name: mypy
-      run: uv run poe mypy
+    - name: Lint
+      run: uv run poe lint
+    - name: Format
+      run: uv run poe format-check
+    - name: Type check
+      run: uv run poe type-check
 
   unittests:
     needs: style
