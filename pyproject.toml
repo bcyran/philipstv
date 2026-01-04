@@ -4,6 +4,7 @@ dynamic = ["version"]
 description = "CLI and library to control Philips Android-powered TVs."
 readme = "README.rst"
 requires-python = ">=3.10"
+license = { text = "MIT" }
 maintainers = [{ name = "Bazyli Cyran", email = "bazyli@cyran.dev" }]
 keywords = ["cli", "tv", "api-wrapper", "philips", "ambilight"]
 classifiers = [
@@ -25,18 +26,6 @@ dependencies = ["requests>=2.27.1", "pydantic>=2.4.2"]
 [project.optional-dependencies]
 cli = ["click>=8.2.0", "appdirs>=1.4.4"]
 docs = ["sphinx>=7.2.6", "furo>=2025.7.19", "enum-tools[sphinx]>=0.13.0"]
-dev = [
-    "pytest>=9.0.1",
-    "black>=25.9.0",
-    "mypy>=1.17",
-    "flake8>=7.3.0",
-    "isort>=7.0.0",
-    "types-requests>=2.32.4",
-    "requests-mock>=1.12.1",
-    "pytest-cov>=7.0.0",
-    "types-appdirs>=1.4.3",
-    "sphinx-autobuild>=2024.10.3",
-]
 
 [project.urls]
 repository = "https://github.com/bcyran/philipstv"
@@ -89,6 +78,16 @@ exclude_lines = ["raise NotImplementedError", "pass"]
 
 [dependency-groups]
 dev = [
+    "pytest>=9.0.1",
+    "black>=25.9.0",
+    "mypy>=1.17",
+    "flake8>=7.3.0",
+    "isort>=7.0.0",
+    "types-requests>=2.32.4",
+    "requests-mock>=1.12.1",
+    "pytest-cov>=7.0.0",
+    "types-appdirs>=1.4.3",
+    "sphinx-autobuild>=2024.10.3",
     "poethepoet>=0.39.0",
 ]
 
