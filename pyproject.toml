@@ -25,6 +25,18 @@ dependencies = ["requests>=2.27.1", "pydantic>=2.4.2"]
 [project.optional-dependencies]
 cli = ["click>=8.2.0", "appdirs>=1.4.4"]
 docs = ["sphinx>=7.2.6", "furo>=2025.7.19", "enum-tools[sphinx]>=0.13.0"]
+dev = [
+    "pytest>=9.0.1",
+    "black>=25.9.0",
+    "mypy>=1.17",
+    "flake8>=7.3.0",
+    "isort>=7.0.0",
+    "types-requests>=2.32.4",
+    "requests-mock>=1.12.1",
+    "pytest-cov>=7.0.0",
+    "types-appdirs>=1.4.3",
+    "sphinx-autobuild>=2024.10.3",
+]
 
 [project.urls]
 repository = "https://github.com/bcyran/philipstv"
@@ -33,48 +45,24 @@ documentation = "https://philipstv.readthedocs.io"
 [project.scripts]
 philipstv = "philipstv.__main__:wrapped_cli"
 
-[tool.poetry]
-license = "MIT"
-packages = [{ include = "philipstv", from = "src" }]
-include = [
-    { path = "src/philipstv/**/*.py" },
-    { path = "src/philipstv/py.typed" },
-    { path = "tests/**/*.py", format = "sdist" },
-]
-version = "0.0.0"
-
-[tool.poetry.group.dev.dependencies]
-pytest = "^9.0.1"
-black = "^25.9.0"
-mypy = "^1.17"
-flake8 = "^7.3.0"
-isort = "^7.0.0"
-tox = "^4.30.3"
-types-requests = "^2.32.4"
-requests-mock = "^1.12.1"
-pytest-cov = "^7.0.0"
-types-appdirs = "^1.4.3"
-sphinx-autobuild = "^2024.10.3"
-
 [build-system]
-requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning"]
-build-backend = "poetry_dynamic_versioning.backend"
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
 
-[tool.poetry.requires-plugins]
-poetry-dynamic-versioning = { version = ">=1.0.0,<2.0.0", extras = ["plugin"] }
+[tool.hatch.version]
+source = "vcs"
 
-[tool.poetry-dynamic-versioning]
-enable = true
-vcs = "git"
-style = "semver"
-pattern = """(?x)
-^(?P<base>\\d+(\\.\\d+)*)
-(-?((?P<stage>[a-zA-Z]+)\\.?(?P<revision>\\d+)?))?
-(\\+(?P<tagged_metadata>.+))?$
-"""
+[tool.hatch.version.raw-options]
+tag_regex = "^(?P<version>\\d+\\.\\d+\\.\\d+.*)$"
 
-[tool.poetry-dynamic-versioning.substitution]
-files = ["src/philipstv/__init__.py"]
+[tool.hatch.build.hooks.vcs]
+version-file = "src/philipstv/_version.py"
+
+[tool.hatch.build.targets.sdist]
+include = ["/src", "/tests"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/philipstv"]
 
 [tool.mypy]
 strict = true
@@ -87,6 +75,7 @@ line-length = 100
 [tool.isort]
 profile = "black"
 line_length = 100
+skip = ["src/philipstv/_version.py"]
 
 [tool.coverage.run]
 source = ["philipstv"]

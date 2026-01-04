@@ -7,34 +7,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v6
+      with:
+        fetch-depth: 0  # Required for hatch-vcs to detect version from git tags
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
+      with:
+        enable-cache: true
     - name: Set up Python 3.10
-      uses: actions/setup-python@v6
-      with:
-        python-version: '3.10'
-    - name: Install Poetry
-      uses: snok/install-poetry@v1
-      with:
-        virtualenvs-create: true
-        virtualenvs-in-project: true
-        installer-parallel: true
-    - uses: actions/cache@v5
-      id: cache
-      with:
-        path: |
-          .venv
-          .tox
-        key: tox-${{ runner.os }}-${{ hashFiles('poetry.lock') }}
+      run: uv python install 3.10
     - name: Install dependencies
-      if: steps.cache.outputs.cache-hit != 'true'
-      run: poetry install --no-root --sync
+      run: uv sync --extra cli --extra dev
     - name: flake8
-      run: poetry run tox -e flake8
+      run: uv run flake8 src/ tests/
     - name: black
-      run: poetry run tox -e black
+      run: uv run black --check --diff src/ tests/
     - name: isort
-      run: poetry run tox -e isort
+      run: uv run isort --check --diff src/ tests/
     - name: mypy
-      run: poetry run tox -e mypy
+      run: uv run mypy src/ tests/
 
   unittests:
     needs: style
@@ -48,27 +38,17 @@ jobs:
         shell: bash
     steps:
     - uses: actions/checkout@v6
+      with:
+        fetch-depth: 0  # Required for hatch-vcs to detect version from git tags
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
+      with:
+        enable-cache: true
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v6
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install Poetry
-      uses: snok/install-poetry@v1
-      with:
-        virtualenvs-create: true
-        virtualenvs-in-project: true
-        installer-parallel: true
-    - uses: actions/cache@v5
-      id: tox-cache
-      with:
-        path: |
-          .venv
-          .tox
-        key: tox-${{ matrix.os }}-python${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
+      run: uv python install ${{ matrix.python-version }}
     - name: Install dependencies
-      if: steps.cache.outputs.cache-hit != 'true'
-      run: poetry install --no-root --sync
+      run: uv sync --extra cli --extra dev
     - name: Unittests
-      run: poetry run -- tox -e ut -- --cov-report=xml
+      run: uv run pytest --cov=philipstv --cov-config=pyproject.toml --cov-report=xml tests/
     - name: Upload coverage
       uses: codecov/codecov-action@v5
