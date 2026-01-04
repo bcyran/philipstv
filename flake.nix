@@ -36,7 +36,7 @@
           shellHook = ''
             if [[ ! -d ".venv" ]]; then
               echo "No virtual environment found, creating..."
-              uv venv --python ${pkgs.python3}/bin/python3 --prompt "$(basename $PWD)" .venv
+              uv venv --prompt "$(basename $PWD)" .venv
             fi
             source .venv/bin/activate
 
