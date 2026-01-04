@@ -1,4 +1,3 @@
-from typing import Union
 from unittest.mock import Mock, create_autospec
 
 import pytest
@@ -199,7 +198,7 @@ def test_get_current_channel(api_mock: Mock) -> None:
         ("TVN HD", SetChannel(channel=ChannelID(ccid=40))),
     ],
 )
-def test_set_channel(api_mock: Mock, input: Union[int, str], expected: SetChannel) -> None:
+def test_set_channel(api_mock: Mock, input: int | str, expected: SetChannel) -> None:
     api_mock.get_all_channels.return_value = CHANNELS
     remote = PhilipsTVRemote(api_mock)
 

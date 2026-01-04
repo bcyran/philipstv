@@ -1,8 +1,9 @@
 import logging
 import time
+from collections.abc import Callable
 from dataclasses import dataclass
 from functools import wraps
-from typing import Any, Callable, Optional, Tuple, Union
+from typing import Any
 
 import click
 from click.exceptions import UsageError
@@ -22,7 +23,7 @@ from .remote import PhilipsTVRemote
 
 _LOGGER = logging.getLogger(__name__)
 
-ColorArg = Tuple[int, int, int]
+ColorArg = tuple[int, int, int]
 
 
 COMMON_ERROR_MESSAGE = """\
@@ -50,16 +51,16 @@ def handle_tv_errors(func: Callable[..., None]) -> Callable[..., None]:
             return func(*args, **kwargs)
         except PhilipsTVRemoteError as err:
             _LOGGER.debug("Remote error", exc_info=True)
-            raise click.ClickException(str(err))
-        except PhilipsTVAPIUnauthorizedError:
+            raise click.ClickException(str(err)) from err
+        except PhilipsTVAPIUnauthorizedError as err:
             _LOGGER.debug("Authentication error", exc_info=True)
-            raise click.ClickException(UNAUTHORIZED_MESSAGE)
-        except PhilipsTVError:
+            raise click.ClickException(UNAUTHORIZED_MESSAGE) from err
+        except PhilipsTVError as err:
             _LOGGER.debug("Connection error", exc_info=True)
-            raise click.ClickException(CONNECTION_ERROR_MESSAGE)
-        except PhilipsError:
+            raise click.ClickException(CONNECTION_ERROR_MESSAGE) from err
+        except PhilipsError as err:
             _LOGGER.debug("Unknown error", exc_info=True)
-            raise click.ClickException(UNKNOWN_ERROR_MESSAGE)
+            raise click.ClickException(UNKNOWN_ERROR_MESSAGE) from err
 
     return wrapper
 
@@ -118,9 +119,9 @@ KEY_MAP = {
 @dataclass
 class TVContext:
     remote: PhilipsTVRemote
-    host: Optional[str] = None
-    id: Optional[str] = None
-    key: Optional[str] = None
+    host: str | None = None
+    id: str | None = None
+    key: str | None = None
     save: bool = False
 
 
@@ -143,9 +144,9 @@ CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"]}
 @handle_tv_errors
 def cli(
     ctx: click.Context,
-    host: Optional[str],
-    id: Optional[str],
-    key: Optional[str],
+    host: str | None,
+    id: str | None,
+    key: str | None,
     save: bool,
     debug: bool,
 ) -> None:
@@ -242,7 +243,7 @@ def pair(ctx: click.Context, tv_ctx: TVContext) -> None:
     try:
         credentials = tv_ctx.remote.pair(prompt_pin, tv_ctx.id)
     except PhilipsTVPairingError as err:
-        raise click.ClickException(str(err))
+        raise click.ClickException(str(err)) from err
 
     click.echo("Pairing successful!")
     click.echo(f"ID:\t{credentials[0]}")
@@ -272,7 +273,7 @@ def power_get(tv_ctx: TVContext) -> None:
 @pass_tv_context
 @handle_tv_errors
 def power_set(tv_ctx: TVContext, power: str) -> None:
-    tv_ctx.remote.set_power(True if power == "on" else False)
+    tv_ctx.remote.set_power(power == "on")
 
 
 @cli.group("volume", help="Manage audio volume.")
@@ -319,7 +320,7 @@ def channel_list(tv_ctx: TVContext) -> None:
 @pass_tv_context
 @handle_tv_errors
 def channel_set(tv_ctx: TVContext, channel: str) -> None:
-    set_channel: Union[str, int] = channel
+    set_channel: str | int = channel
     if channel.isdigit():
         set_channel = int(set_channel)
     tv_ctx.remote.set_channel(set_channel)
@@ -334,7 +335,7 @@ def channel_set(tv_ctx: TVContext, channel: str) -> None:
 )
 @pass_tv_context
 @handle_tv_errors
-def key(tv_ctx: TVContext, keys: Tuple[str, ...], delay: Optional[int]) -> None:
+def key(tv_ctx: TVContext, keys: tuple[str, ...], delay: int | None) -> None:
     """Emulate pressing keys on the TV remote.
 
     You can provide any number of key names, separated by a space. They will be sent to the TV in
@@ -372,7 +373,7 @@ def ambilight_power_get(tv_ctx: TVContext) -> None:
 @pass_tv_context
 @handle_tv_errors
 def ambilight_power_set(tv_ctx: TVContext, power: str) -> None:
-    tv_ctx.remote.set_ambilight_power(True if power == "on" else False)
+    tv_ctx.remote.set_ambilight_power(power == "on")
 
 
 @ambilight.group("color", help="Manage ambilight color.")
@@ -390,11 +391,11 @@ def ambilight_color() -> None:
 @handle_tv_errors
 def ambilight_color_set(
     tv_ctx: TVContext,
-    color: Optional[ColorArg],
-    left: Optional[ColorArg],
-    top: Optional[ColorArg],
-    right: Optional[ColorArg],
-    bottom: Optional[ColorArg],
+    color: ColorArg | None,
+    left: ColorArg | None,
+    top: ColorArg | None,
+    right: ColorArg | None,
+    bottom: ColorArg | None,
 ) -> None:
     """Set ambilight color.
 

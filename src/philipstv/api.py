@@ -1,5 +1,6 @@
+from collections.abc import Iterator
 from contextlib import contextmanager
-from typing import Any, Iterator, Optional, Type, TypeVar
+from typing import Any, TypeVar
 
 from philipstv.exceptions import (
     PhilipsTVAPIMalformedResponseError,
@@ -82,7 +83,7 @@ class PhilipsTVAPI:
         return self._tv.host
 
     @property
-    def auth(self) -> Optional[Credentials]:
+    def auth(self) -> Credentials | None:
         """Credentials used for authentication in the underlying :class:`PhilipsTV` instance.
 
         Hint:
@@ -92,7 +93,7 @@ class PhilipsTVAPI:
         return self._tv.auth
 
     @auth.setter
-    def auth(self, auth: Optional[Credentials]) -> None:
+    def auth(self, auth: Credentials | None) -> None:
         self._tv.auth = auth
 
     def pair_request(self, payload: PairingRequestPayload) -> PairingRequestResponse:
@@ -244,18 +245,18 @@ class PhilipsTVAPI:
         self._api_post("activities/launch", application)
 
     def _api_post_model(
-        self, path: str, resp_model: Type[_T], payload: Optional[APIObject] = None
+        self, path: str, resp_model: type[_T], payload: APIObject | None = None
     ) -> _T:
         raw_response = self._api_post(path, payload)
         with _wrap_validation_exceptions("POST", path, raw_response):
             return resp_model.parse(raw_response)
 
-    def _api_get_model(self, path: str, response_model: Type[_T]) -> _T:
+    def _api_get_model(self, path: str, response_model: type[_T]) -> _T:
         raw_response = self._api_get(path)
         with _wrap_validation_exceptions("GET", path, raw_response):
             return response_model.parse(raw_response)
 
-    def _api_post(self, path: str, payload: Optional[APIObject] = None) -> Any:
+    def _api_post(self, path: str, payload: APIObject | None = None) -> Any:
         with _wrap_unauthorized_exceptions("POST", path):
             return self._tv.post(self._api_path(path), payload.dump() if payload else None)
 

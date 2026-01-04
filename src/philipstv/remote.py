@@ -1,5 +1,4 @@
 import platform
-from typing import Dict, List, Optional, Union
 
 from ._utils import create_device_id
 from .api import PhilipsTVAPI
@@ -50,9 +49,9 @@ class PhilipsTVRemote:
 
         """
         self._api = api
-        self._channels_cache: List[Channel] = []
-        self._applications_cache: List[Application] = []
-        self._ambilight_topology_cache: Optional[AmbilightTopology] = None
+        self._channels_cache: list[Channel] = []
+        self._applications_cache: list[Application] = []
+        self._ambilight_topology_cache: AmbilightTopology | None = None
 
     @property
     def host(self) -> str:
@@ -65,7 +64,7 @@ class PhilipsTVRemote:
         return self._api.host
 
     @property
-    def auth(self) -> Optional[Credentials]:
+    def auth(self) -> Credentials | None:
         """Credentials used for authentication in the underlying :class:`PhilipsTVAPI` instance.
 
         Hint:
@@ -75,11 +74,11 @@ class PhilipsTVRemote:
         return self._api.auth
 
     @auth.setter
-    def auth(self, value: Optional[Credentials]) -> None:
+    def auth(self, value: Credentials | None) -> None:
         self._api.auth = value
 
     @classmethod
-    def new(cls, host: str, auth: Optional[Credentials] = None) -> "PhilipsTVRemote":
+    def new(cls, host: str, auth: Credentials | None = None) -> "PhilipsTVRemote":
         """Create a new remote for given host without the need to inject:class:`PhilipsTVAPI`
         instance.
 
@@ -91,7 +90,7 @@ class PhilipsTVRemote:
         """
         return cls(PhilipsTVAPI(PhilipsTV(host=host, auth=auth)))
 
-    def pair(self, pin_callback: PinCallback, id: Optional[str] = None) -> Credentials:
+    def pair(self, pin_callback: PinCallback, id: str | None = None) -> Credentials:
         """Perform pairing with the TV.
 
         After successful pairing this remote instance will be authenticated, even if you didn't
@@ -128,7 +127,7 @@ class PhilipsTVRemote:
             A power state. `True` means on, `False` means standby.
 
         """
-        return True if self._api.get_powerstate().powerstate == PowerStateValue.ON else False
+        return self._api.get_powerstate().powerstate == PowerStateValue.ON
 
     def set_power(self, power: bool) -> None:
         """Set current power state.
@@ -165,7 +164,7 @@ class PhilipsTVRemote:
         """
         return self._api.get_current_channel().channel.name
 
-    def set_channel(self, channel: Union[int, str]) -> None:
+    def set_channel(self, channel: int | str) -> None:
         """Change to the given TV channel.
 
         Use :func:`get_all_channels` to find valid values.
@@ -194,7 +193,7 @@ class PhilipsTVRemote:
 
         self._api.set_channel(SetChannel(channel=ChannelID(ccid=found_channel.ccid)))
 
-    def get_all_channels(self) -> Dict[int, str]:
+    def get_all_channels(self) -> dict[int, str]:
         """Return all available channels and their numbers.
 
         Returns:
@@ -220,7 +219,7 @@ class PhilipsTVRemote:
             Ambilight power state. `True` means on, `False` means off.
 
         """
-        return True if self._api.get_ambilight_power().power == AmbilightPowerValue.ON else False
+        return self._api.get_ambilight_power().power == AmbilightPowerValue.ON
 
     def set_ambilight_power(self, power: bool) -> None:
         """Set ambilight power state.
@@ -234,12 +233,12 @@ class PhilipsTVRemote:
 
     def set_ambilight_color(
         self,
-        color: Optional[AmbilightColor] = None,
+        color: AmbilightColor | None = None,
         *,
-        left: Optional[AmbilightColor] = None,
-        top: Optional[AmbilightColor] = None,
-        right: Optional[AmbilightColor] = None,
-        bottom: Optional[AmbilightColor] = None,
+        left: AmbilightColor | None = None,
+        top: AmbilightColor | None = None,
+        right: AmbilightColor | None = None,
+        bottom: AmbilightColor | None = None,
     ) -> None:
         """Set ambilight color.
 
@@ -278,10 +277,10 @@ class PhilipsTVRemote:
 
     def _create_ambilight_side(
         self, color: AmbilightColor, points: int
-    ) -> Dict[str, AmbilightColor]:
+    ) -> dict[str, AmbilightColor]:
         return {str(point): color for point in range(points)}
 
-    def get_applications(self) -> List[str]:
+    def get_applications(self) -> list[str]:
         """Return a list of available applications.
 
         Returns:

@@ -1,8 +1,8 @@
 from enum import Enum
-from typing import Any, Type, TypeVar
+from typing import Any, TypeVar
 
 from pydantic import BaseModel
-from pydantic import ValidationError as ValidationError  # noqa: F401 | intentional reexport
+from pydantic import ValidationError as ValidationError
 
 _SelfAPIObject = TypeVar("_SelfAPIObject", bound="APIObject")
 
@@ -30,7 +30,7 @@ class APIObject(BaseModel):
         return self.model_dump(by_alias=True)
 
     @classmethod
-    def parse(cls: Type[_SelfAPIObject], raw: Any) -> _SelfAPIObject:
+    def parse(cls: type[_SelfAPIObject], raw: Any) -> _SelfAPIObject:
         """Construct the API object from given JSON data.
 
         Each :class:`APIObject` can be created from JSON data (usually a dict) of some API request

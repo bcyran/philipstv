@@ -1,3 +1,1 @@
-from typing import Tuple
-
-Credentials = Tuple[str, str]
+Credentials = tuple[str, str]

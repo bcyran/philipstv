@@ -1,5 +1,3 @@
-from typing import List
-
 from pydantic.fields import Field
 
 from .base import APIObject
@@ -48,5 +46,5 @@ class Applications(APIObject):
 
     version: int
     """List version."""
-    applications: List[Application]
+    applications: list[Application]
     """List of application definitions."""

@@ -21,7 +21,7 @@ DEVICE_INFO = DeviceInfo(
     app_name="<app_name>",
     type="<type>",
 )
-SIGNATURE = create_signature(_SECRET, "12345<pin>".encode()).decode()
+SIGNATURE = create_signature(_SECRET, b"12345<pin>").decode()
 REQUEST_REPONSE_OK = PairingRequestResponse(
     error_id="SUCCESS",
     error_text="Authorization required",

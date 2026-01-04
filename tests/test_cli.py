@@ -1,7 +1,7 @@
 import json
 import time
+from collections.abc import Callable, Sequence
 from pathlib import Path
-from typing import Callable, List, Optional, Sequence, Union
 from unittest.mock import Mock, call, create_autospec
 
 import pytest
@@ -48,11 +48,11 @@ def sleep_mock(monkeypatch: MonkeyPatch) -> Mock:
     return mock_sleep  # type: ignore
 
 
-def run(*args: str, input: Optional[str] = None) -> Result:
+def run(*args: str, input: str | None = None) -> Result:
     return CliRunner().invoke(cli, args, input=input)
 
 
-def run_with_auth(*args: str, input: Optional[str] = None) -> Result:
+def run_with_auth(*args: str, input: str | None = None) -> Result:
     return run("--host", "<host>", "--id", "<id>", "--key", "<key>", *args, input=input)
 
 
@@ -140,7 +140,7 @@ def test_pair(remote: Mock) -> None:
     given_id = "<myid>"
     given_pin = "<pin>"
 
-    def mock_pair(callback: Callable[[], str], id: Optional[str] = None) -> Credentials:
+    def mock_pair(callback: Callable[[], str], id: str | None = None) -> Credentials:
         assert callback() == given_pin
         return (id or "<defaultid>", "<secret>")
 
@@ -229,7 +229,7 @@ def test_channel_list(remote: Mock) -> None:
         ("17", 17),
     ],
 )
-def test_channel_set(remote: Mock, channel: str, expected: Union[str, int]) -> None:
+def test_channel_set(remote: Mock, channel: str, expected: str | int) -> None:
     run_with_auth("channel", "set", channel)
 
     remote.set_channel.assert_called_once_with(expected)
@@ -258,8 +258,8 @@ def test_channel_set_error(remote: Mock) -> None:
 def test_key(
     remote: Mock,
     sleep_mock: Mock,
-    args: List[str],
-    expected_keys: List[InputKeyValue],
+    args: list[str],
+    expected_keys: list[InputKeyValue],
     expected_sleep_calls: int,
 ) -> None:
     run_with_auth("key", *args)

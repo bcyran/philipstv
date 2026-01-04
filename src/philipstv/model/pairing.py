@@ -1,5 +1,3 @@
-from typing import List, Optional
-
 from .base import APIObject
 
 
@@ -34,7 +32,7 @@ class PairingAuthInfo(APIObject):
 class PairingRequestPayload(APIObject):
     """Model of a pairing request."""
 
-    scope: List[str]
+    scope: list[str]
     """Requested permissions scope. Available options are `read`, `write`, `control`."""
     device: DeviceInfo
     """Requesting device info."""
@@ -73,9 +71,9 @@ class PairingRequestResponse(PairingResponse):
 
     """
 
-    auth_key: Optional[str] = None
+    auth_key: str | None = None
     """Authentication key."""
-    timestamp: Optional[int] = None
+    timestamp: int | None = None
     """Timestamp sent by TV."""
-    timeout: Optional[int] = None
+    timeout: int | None = None
     """Timeout before the pairing is cancelled."""

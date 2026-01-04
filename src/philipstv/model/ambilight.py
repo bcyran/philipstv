@@ -1,5 +1,3 @@
-from typing import Dict, Tuple, Union
-
 from pydantic import RootModel
 from pydantic.fields import Field
 
@@ -61,7 +59,7 @@ class AmbilightColor(APIObject):
     """Blue color component."""
 
     @classmethod
-    def from_tuple(cls, color_tuple: Tuple[int, int, int]) -> "AmbilightColor":
+    def from_tuple(cls, color_tuple: tuple[int, int, int]) -> "AmbilightColor":
         """Create :class:`AmbilightColor` instance from a tuple.
 
         Args:
@@ -83,17 +81,17 @@ class AmbilightLayer(APIObject):
 
     """
 
-    left: Dict[str, AmbilightColor] = Field(default_factory=dict)
+    left: dict[str, AmbilightColor] = Field(default_factory=dict)
     """Colors of pixels on the left edge."""
-    top: Dict[str, AmbilightColor] = Field(default_factory=dict)
+    top: dict[str, AmbilightColor] = Field(default_factory=dict)
     """Colors of pixels on the top edge."""
-    right: Dict[str, AmbilightColor] = Field(default_factory=dict)
+    right: dict[str, AmbilightColor] = Field(default_factory=dict)
     """Colors of pixels on the right edge."""
-    bottom: Dict[str, AmbilightColor] = Field(default_factory=dict)
+    bottom: dict[str, AmbilightColor] = Field(default_factory=dict)
     """Colors of pixels on the bottom edge."""
 
 
-class AmbilightColors(APIObject, RootModel[Dict[str, AmbilightLayer]]):
+class AmbilightColors(APIObject, RootModel[dict[str, AmbilightLayer]]):
     """Model of full Amblight per-pixel color definition.
 
     This model is actually a wrapper around a dict since layer names are not predefined.
@@ -105,14 +103,14 @@ class AmbilightColors(APIObject, RootModel[Dict[str, AmbilightLayer]]):
 
     """
 
-    root: Dict[str, AmbilightLayer]
+    root: dict[str, AmbilightLayer]
     """Mapping of layer name to :class:`AmbilightLayer`."""
 
     def __getitem__(self, item: str) -> AmbilightLayer:
         return self.root[item]
 
 
-AmbilightColorSettings = Union[
-    AmbilightColor,  # single color for all pixels
-    AmbilightColors,  # individual pixels
-]
+AmbilightColorSettings = (
+    AmbilightColor  # single color for all pixels
+    | AmbilightColors  # individual pixels
+)

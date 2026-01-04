@@ -1,6 +1,6 @@
 import logging
 from base64 import b64decode
-from typing import Callable
+from collections.abc import Callable
 
 from ._utils import create_signature
 from .api import PhilipsTVAPI

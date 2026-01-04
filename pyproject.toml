@@ -67,8 +67,18 @@ line-length = 100
 exclude = ["src/philipstv/_version.py"]
 
 [tool.ruff.lint]
-# Conservative rule set: E (pycodestyle errors), F (pyflakes) - equivalent to flake8 defaults
-select = ["E", "F"]
+select = [
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+    "W",   # pycodestyle warnings
+    "I",   # isort (import sorting)
+    "N",   # pep8-naming
+    "UP",  # pyupgrade (modernize Python code)
+    "B",   # flake8-bugbear (catch common bugs)
+    "C4",  # flake8-comprehensions (better list/dict/set comprehensions)
+    "SIM", # flake8-simplify (simplification suggestions)
+    "RUF", # Ruff-specific rules
+]
 ignore = []
 
 [tool.ruff.format]

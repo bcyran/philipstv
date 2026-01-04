@@ -1,4 +1,4 @@
-from typing import Any, Type
+from typing import Any
 
 import pytest
 
@@ -433,7 +433,7 @@ def test_launch_application() -> None:
         ),
     ],
 )
-def test_api_error(response: Any, expected_exception: Type[Exception]) -> None:
+def test_api_error(response: Any, expected_exception: type[Exception]) -> None:
     fake_tv = FakePhilipsTV(get_responses={"6/powerstate": response})
 
     with pytest.raises(expected_exception):

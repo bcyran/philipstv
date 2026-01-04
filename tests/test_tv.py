@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional
+from typing import Any
 
 import pytest
 from requests_mock import Mocker
@@ -33,7 +33,7 @@ def test_tv_auth() -> None:
 @pytest.mark.parametrize("path, expected_url", PATHS)
 @pytest.mark.parametrize("expected_response", RESPONSES)
 def test_tv_post(
-    path: str, expected_url: str, expected_response: Optional[Dict[str, Any]], requests_mock: Mocker
+    path: str, expected_url: str, expected_response: dict[str, Any] | None, requests_mock: Mocker
 ) -> None:
     requests_mock.post(expected_url, json=expected_response)
 
@@ -48,7 +48,7 @@ def test_tv_post(
 @pytest.mark.parametrize("path, expected_url", PATHS)
 @pytest.mark.parametrize("expected_response", RESPONSES)
 def test_tv_get(
-    path: str, expected_url: str, expected_response: Optional[Dict[str, Any]], requests_mock: Mocker
+    path: str, expected_url: str, expected_response: dict[str, Any] | None, requests_mock: Mocker
 ) -> None:
     requests_mock.get(expected_url, json=expected_response)
 

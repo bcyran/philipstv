@@ -1,5 +1,3 @@
-from typing import List
-
 from pydantic import Field
 
 from .base import APIObject
@@ -85,5 +83,5 @@ class AllChannels(APIObject):
     """TC operator name."""
     install_country: str = Field(alias="installCountry")
     """Country the TV service is installed in."""
-    channel: List[Channel] = Field(alias="Channel")
+    channel: list[Channel] = Field(alias="Channel")
     """List of channel definitions."""

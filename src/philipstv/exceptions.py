@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any
 
 from .model import PairingResponse
 
@@ -24,7 +24,7 @@ class PhilipsTVError(PhilipsError):
 
     """
 
-    def __init__(self, method: str, url: str, status_code: Optional[int] = None) -> None:
+    def __init__(self, method: str, url: str, status_code: int | None = None) -> None:
         message = f"{method} request to {url} failed"
         if status_code:
             message += f" with status {status_code}"

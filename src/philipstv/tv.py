@@ -1,6 +1,7 @@
 import logging
+from collections.abc import Iterator
 from contextlib import contextmanager
-from typing import Any, Iterator, Optional
+from typing import Any
 from urllib.parse import urljoin
 
 import urllib3
@@ -35,7 +36,7 @@ class PhilipsTV:
     have to worry about this.
     """
 
-    def __init__(self, host: str, port: int = 1926, auth: Optional[Credentials] = None) -> None:
+    def __init__(self, host: str, port: int = 1926, auth: Credentials | None = None) -> None:
         """
         Args:
             host: TV IP address to connect to.
@@ -47,12 +48,12 @@ class PhilipsTV:
         self.port = port
         self.url = f"https://{self.host}:{self.port}"
 
-        self._auth: Optional[Credentials] = None
+        self._auth: Credentials | None = None
         self._session = self._create_session()
         self.auth = auth
 
     @property
-    def auth(self) -> Optional[Credentials]:
+    def auth(self) -> Credentials | None:
         """Credentials used for authentication.
 
         Hint:
@@ -62,7 +63,7 @@ class PhilipsTV:
         return self._auth
 
     @auth.setter
-    def auth(self, value: Optional[Credentials]) -> None:
+    def auth(self, value: Credentials | None) -> None:
         self._session.auth = HTTPDigestAuth(*value) if value else None
         self._auth = value
 
