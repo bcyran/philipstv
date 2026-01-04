@@ -31,6 +31,19 @@ docs = [
     "enum-tools[sphinx]>=0.13.0",
 ]
 
+[dependency-groups]
+dev = [
+    "pytest>=9.0.1",
+    "ruff>=0.14.10",
+    "mypy>=1.17",
+    "types-requests>=2.32.4",
+    "requests-mock>=1.12.1",
+    "pytest-cov>=7.0.0",
+    "types-appdirs>=1.4.3",
+    "sphinx-autobuild>=2024.10.3",
+    "poethepoet>=0.39.0",
+]
+
 [project.urls]
 repository = "https://github.com/bcyran/philipstv"
 documentation = "https://philipstv.readthedocs.io"
@@ -82,9 +95,7 @@ select = [
 ignore = []
 
 [tool.ruff.format]
-# Use double quotes for strings (like black default)
 quote-style = "double"
-# Indent with spaces (like black default)
 indent-style = "space"
 
 [tool.coverage.run]
@@ -97,21 +108,7 @@ skip_covered = true
 skip_empty = true
 exclude_lines = ["raise NotImplementedError", "pass"]
 
-[dependency-groups]
-dev = [
-    "pytest>=9.0.1",
-    "ruff>=0.14.10",
-    "mypy>=1.17",
-    "types-requests>=2.32.4",
-    "requests-mock>=1.12.1",
-    "pytest-cov>=7.0.0",
-    "types-appdirs>=1.4.3",
-    "sphinx-autobuild>=2024.10.3",
-    "poethepoet>=0.39.0",
-]
-
 [tool.poe.tasks]
-# Individual quality check tasks
 test = "pytest --cov=philipstv --cov-config=pyproject.toml tests/"
 type-check = "mypy src/ tests/"
 lint = "ruff check src/ tests/"
