@@ -86,3 +86,30 @@ show_missing = true
 skip_covered = true
 skip_empty = true
 exclude_lines = ["raise NotImplementedError", "pass"]
+
+[dependency-groups]
+dev = [
+    "poethepoet>=0.39.0",
+]
+
+[tool.poe.tasks]
+# Individual quality check tasks
+test = "pytest --cov=philipstv --cov-config=pyproject.toml tests/"
+mypy = "mypy src/ tests/"
+black = "black --check --diff src/ tests/"
+flake8 = "flake8 src/ tests/"
+isort = "isort --check --diff src/ tests/"
+format-black = "black src/ tests/"
+format-isort = "isort src/ tests/"
+
+[tool.poe.tasks.check]
+help = "Run all quality checks (tests, type checking, formatting, linting)"
+sequence = ["test", "mypy", "black", "flake8", "isort"]
+
+[tool.poe.tasks.format]
+help = "Auto-format code with black and isort"
+sequence = ["format-black", "format-isort"]
+
+[tool.poe.tasks.build]
+help = "Build package distributions"
+cmd = "uv build"
