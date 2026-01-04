@@ -79,7 +79,7 @@ skip = ["src/philipstv/_version.py"]
 
 [tool.coverage.run]
 source = ["philipstv"]
-omit = ["src/philipstv/__main__.py"]
+omit = ["src/philipstv/__main__.py", "src/philipstv/_version.py"]
 
 [tool.coverage.report]
 show_missing = true
