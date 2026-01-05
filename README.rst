@@ -3,19 +3,23 @@ philipstv
 
 .. image:: https://github.com/bcyran/philipstv/actions/workflows/test.yml/badge.svg
    :target: https://github.com/bcyran/philipstv/actions/workflows/test.yml
-   :alt: CI
+   :alt: test
+
+.. image:: https://github.com/bcyran/philipstv/actions/workflows/release.yml/badge.svg
+   :target: https://github.com/bcyran/philipstv/actions/workflows/release.yml
+   :alt: release
 
 .. image:: https://codecov.io/gh/bcyran/philipstv/branch/master/graph/badge.svg?token=ROJONX34RB
    :target: https://codecov.io/gh/bcyran/philipstv
    :alt: codecov
 
-.. image:: https://img.shields.io/pypi/v/philipstv
-   :target: https://pypi.org/project/philipstv/
-   :alt: pypi
-
 .. image:: https://readthedocs.org/projects/philipstv/badge/?version=latest
    :target: https://philipstv.readthedocs.io/en/stable/?badge=latest
    :alt: Documentation status
+
+.. image:: https://img.shields.io/pypi/v/philipstv
+   :target: https://pypi.org/project/philipstv/
+   :alt: pypi
 
 .. image:: https://img.shields.io/pypi/pyversions/philipstv
    :target: https://pypi.org/project/philipstv/
