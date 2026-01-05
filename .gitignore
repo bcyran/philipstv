@@ -163,8 +163,5 @@ devenv.local.nix
 # direnv
 .direnv
 
-# uv
-uv.lock
-
 # Generated version file (managed by hatch-vcs)
 src/philipstv/_version.py
