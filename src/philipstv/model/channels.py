@@ -1,3 +1,5 @@
+from typing import Any
+
 from pydantic import Field
 
 from .base import APIObject
@@ -27,6 +29,10 @@ class ModifyFavourite(APIObject):
     """Channels to remove from the favourite list."""
     name: str | None = None
     """Optional new name for the favourite list."""
+
+    def dump(self) -> Any:
+        """Dump excluding None fields — the TV firmware rejects null values."""
+        return self.model_dump(by_alias=True, exclude_none=True)
 
 
 class FavouriteList(APIObject):

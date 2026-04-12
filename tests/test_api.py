@@ -288,8 +288,6 @@ def test_modify_favourite_add_only() -> None:
     assert fake_tv.post_requests == {
         "6/channeldb/tv/modifyfavourite/3": {
             "add": {"id": [10]},
-            "remove": None,
-            "name": None,
         }
     }
 
