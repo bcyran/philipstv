@@ -20,7 +20,9 @@ from .model import (
     ApplicationShort,
     CurrentChannel,
     CurrentVolume,
+    FavouriteList,
     InputKey,
+    ModifyFavourite,
     PairingGrantPayload,
     PairingRequestPayload,
     PairingRequestResponse,
@@ -153,6 +155,41 @@ class PhilipsTVAPI:
         """Send request to set the channel."""
         self._api_post("activities/tv", channel)
 
+    def modify_favourite(self, list_id: int, payload: ModifyFavourite) -> None:
+        """Send request to add or remove channels from a favourite list.
+
+        This uses the ``POST /6/channeldb/tv/modifyfavourite/{list_id}`` endpoint
+        discovered via firmware decompilation.
+
+        Note:
+            The TV must be actively watching a channel (not on the home screen),
+            otherwise the API returns 503.
+
+        Args:
+            list_id: Favourite list ID (1-8).
+            payload: Channels to add/remove and optional list rename.
+
+        """
+        self._api_post(f"channeldb/tv/modifyfavourite/{list_id}", payload)
+
+    def set_favourite_list(self, list_id: int, favourite_list: FavouriteList) -> None:
+        """Send request to replace an entire favourite list.
+
+        This uses the ``PUT /6/channeldb/tv/favoriteLists/{list_id}`` endpoint
+        discovered via firmware decompilation. The endpoint requires PUT;
+        POST returns 405.
+
+        Note:
+            The TV must be actively watching a channel (not on the home screen),
+            otherwise the API returns 503.
+
+        Args:
+            list_id: Favourite list ID (1-8).
+            favourite_list: The complete ordered list of channel ccids.
+
+        """
+        self._api_put(f"channeldb/tv/favoriteLists/{list_id}", favourite_list)
+
     def input_key(self, key: InputKey) -> None:
         """Send request to simulate pressing key on the remote."""
         self._api_post("input/key", key)
@@ -259,6 +296,10 @@ class PhilipsTVAPI:
     def _api_post(self, path: str, payload: APIObject | None = None) -> Any:
         with _wrap_unauthorized_exceptions("POST", path):
             return self._tv.post(self._api_path(path), payload.dump() if payload else None)
+
+    def _api_put(self, path: str, payload: APIObject | None = None) -> Any:
+        with _wrap_unauthorized_exceptions("PUT", path):
+            return self._tv.put(self._api_path(path), payload.dump() if payload else None)
 
     def _api_get(self, path: str) -> Any:
         with _wrap_unauthorized_exceptions("GET", path):

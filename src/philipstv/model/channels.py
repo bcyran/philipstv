@@ -3,6 +3,47 @@ from pydantic import Field
 from .base import APIObject
 
 
+class FavouriteIDList(APIObject):
+    """Model of an ID list used inside a modify favourite request."""
+
+    id: list[int]
+    """List of channel ccid values."""
+
+
+class ModifyFavourite(APIObject):
+    """Model of a modify favourite request (add/remove channels).
+
+    Corresponds to ``POST /6/channeldb/tv/modifyfavourite/{list_id}``.
+
+    Note:
+        The TV must be actively watching a channel (not on the home screen),
+        otherwise the API returns 503.
+
+    """
+
+    add: FavouriteIDList | None = None
+    """Channels to add to the favourite list."""
+    remove: FavouriteIDList | None = None
+    """Channels to remove from the favourite list."""
+    name: str | None = None
+    """Optional new name for the favourite list."""
+
+
+class FavouriteList(APIObject):
+    """Model of a favourite list replacement request.
+
+    Corresponds to ``PUT /6/channeldb/tv/favoriteLists/{list_id}``.
+
+    Note:
+        The TV must be actively watching a channel (not on the home screen),
+        otherwise the API returns 503.
+
+    """
+
+    channels: list[int]
+    """Ordered list of channel ccid values that will replace the entire favourite list."""
+
+
 class ChannelID(APIObject):
     """Model of a channel change request."""
 

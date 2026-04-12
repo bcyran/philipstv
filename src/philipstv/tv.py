@@ -87,6 +87,26 @@ class PhilipsTV:
         _LOGGER.debug("Response: %s %s", response.status_code, response_body)
         return response_body
 
+    def put(self, path: str, payload: Any = None) -> Any:
+        """Send `PUT` request.
+
+        Args:
+            path: The path to send the request to.
+            payload: Request payload to send.
+
+        Returns:
+            The TV's JSON response body or ``None``.
+
+        """
+        _LOGGER.debug("Request: PUT %s %s", path, payload)
+        url = urljoin(self.url, path)
+        with _wrap_http_exceptions("PUT", url):
+            response = self._session.put(url, json=payload)
+            response.raise_for_status()
+        response_body = response.json() if response.content else None
+        _LOGGER.debug("Response: %s %s", response.status_code, response_body)
+        return response_body
+
     def get(self, path: str) -> Any:
         """Send `GET` request.
 

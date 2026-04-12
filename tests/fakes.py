@@ -10,14 +10,17 @@ class FakePhilipsTV(PhilipsTV):
         self,
         post_responses: dict[str, Any] | None = None,
         get_responses: dict[str, Any] | None = None,
+        put_responses: dict[str, Any] | None = None,
     ) -> None:
         self.host = ""
         self._auth: Credentials | None = None
         self.post_requests: dict[str, Any] = {}
         self.get_requests: set[str] = set()
+        self.put_requests: dict[str, Any] = {}
 
         self.post_responses = post_responses or {}
         self.get_responses = get_responses or {}
+        self.put_responses = put_responses or {}
 
     @property
     def auth(self) -> Credentials | None:
@@ -33,6 +36,13 @@ class FakePhilipsTV(PhilipsTV):
             return self._raise_or_return(self.post_responses[path])
         except KeyError as err:
             raise PhilipsTVError("POST", path, 404) from err
+
+    def put(self, path: str, payload: Any = None) -> Any:
+        self.put_requests[path] = payload
+        try:
+            return self._raise_or_return(self.put_responses[path])
+        except KeyError as err:
+            raise PhilipsTVError("PUT", path, 404) from err
 
     def get(self, path: str) -> Any:
         self.get_requests.add(path)

@@ -26,6 +26,9 @@ from .channels import (
     ChannelListID,
     ChannelShort,
     CurrentChannel,
+    FavouriteIDList,
+    FavouriteList,
+    ModifyFavourite,
     SetChannel,
 )
 from .general import PowerState, PowerStateValue
@@ -64,8 +67,11 @@ __all__ = [
     "CurrentChannel",
     "CurrentVolume",
     "DeviceInfo",
+    "FavouriteIDList",
+    "FavouriteList",
     "InputKey",
     "InputKeyValue",
+    "ModifyFavourite",
     "PairingAuthInfo",
     "PairingGrantPayload",
     "PairingRequestPayload",
