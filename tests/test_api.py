@@ -253,9 +253,7 @@ def test_get_all_channels() -> None:
 
 
 def test_modify_favourite() -> None:
-    fake_tv = FakePhilipsTV(
-        post_responses={"6/channeldb/tv/modifyfavourite/1": None}
-    )
+    fake_tv = FakePhilipsTV(post_responses={"6/channeldb/tv/modifyfavourite/1": None})
 
     PhilipsTVAPI(fake_tv).modify_favourite(
         1,
@@ -276,9 +274,7 @@ def test_modify_favourite() -> None:
 
 
 def test_modify_favourite_add_only() -> None:
-    fake_tv = FakePhilipsTV(
-        post_responses={"6/channeldb/tv/modifyfavourite/3": None}
-    )
+    fake_tv = FakePhilipsTV(post_responses={"6/channeldb/tv/modifyfavourite/3": None})
 
     PhilipsTVAPI(fake_tv).modify_favourite(
         3,
@@ -293,18 +289,14 @@ def test_modify_favourite_add_only() -> None:
 
 
 def test_set_favourite_list() -> None:
-    fake_tv = FakePhilipsTV(
-        put_responses={"6/channeldb/tv/favoriteLists/2": None}
-    )
+    fake_tv = FakePhilipsTV(put_responses={"6/channeldb/tv/favoriteLists/2": None})
 
     PhilipsTVAPI(fake_tv).set_favourite_list(
         2,
         FavouriteList(channels=[22, 23, 24]),
     )
 
-    assert fake_tv.put_requests == {
-        "6/channeldb/tv/favoriteLists/2": {"channels": [22, 23, 24]}
-    }
+    assert fake_tv.put_requests == {"6/channeldb/tv/favoriteLists/2": {"channels": [22, 23, 24]}}
 
 
 def test_input_key() -> None:
