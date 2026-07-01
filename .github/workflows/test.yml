@@ -55,4 +55,4 @@ jobs:
       - name: Unittests
         run: uv run poe test --cov-report=xml
       - name: Upload coverage
-        uses: codecov/codecov-action@v6
+        uses: codecov/codecov-action@v7
